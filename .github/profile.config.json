@@ -1,0 +1,63 @@
+{
+  "github": {
+    "username": "6jt8"
+  },
+  "displayMode": {
+    "_comment": "'components' = readme-aura components, 'profile' = unified profile SVG only",
+    "mode": "components"
+  },
+  "profile": {
+    "name": "6jt8",
+    "heroTitle": "Fullstack Systems Developer",
+    "heroTagline": "Building clean tools  \u2022  Automating workflows  \u2022  Ship small projects",
+    "heroTags": [
+      { "label": "TypeScript", "color": "#3178c6" },
+      { "label": "Python", "color": "#3572A5" },
+      { "label": "C#", "color": "#178600" },
+      { "label": "Rust", "color": "#dea584" }
+    ],
+    "profileHeading": "Fullstack Developer",
+    "profileDescription": "Building clean tools, automating workflows, and shipping small projects. TypeScript, Python, C#, Rust.",
+    "techStack": [
+      { "label": "TypeScript", "color": "#3178c6" },
+      { "label": "Python", "color": "#3572A5" },
+      { "label": "C#", "color": "#178600" },
+      { "label": "Rust", "color": "#dea584" },
+      { "label": "Svelte", "color": "#ff3e00" },
+      { "label": "JavaScript", "color": "#f1e05a" },
+      { "label": "HTML", "color": "#e34c26" },
+      { "label": "CSS", "color": "#663399" }
+    ],
+    "learning": ["Kotlin", "Node.js APIs", "Clean Architecture", "Automation"],
+    "footer": "6jt8 \u2022 TYPESCRIPT PYTHON C# RUST"
+  },
+  "experience": [
+    "DC-Lyra Discord music bot",
+    "devinspire README quotes",
+    "nightcord Discord utilities"
+  ],
+  "projects": {
+    "_comment": "mode options: 'custom' = use custom[] below, 'top' = top 3 most starred repos, 'pinned' = pinned repos from GitHub",
+    "mode": "custom",
+    "custom": [
+      {
+        "name": "DC-Lyra",
+        "subtitle": "Discord Music Bot",
+        "description": "A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management",
+        "tech": [{ "label": "TypeScript", "color": "#3178c6" }]
+      },
+      {
+        "name": "devinspire",
+        "subtitle": "Dev Quotes for README",
+        "description": "Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.",
+        "tech": [{ "label": "JavaScript", "color": "#f1e05a" }]
+      },
+      {
+        "name": "nightcord",
+        "subtitle": "Discord Utilities",
+        "description": "Everything Discord doesn\u0027t build, we create. Custom Discord tools and utilities for server management.",
+        "tech": [{ "label": "TypeScript", "color": "#3178c6" }]
+      }
+    ]
+  }
+}

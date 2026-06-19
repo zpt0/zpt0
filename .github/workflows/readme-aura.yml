@@ -1,0 +1,42 @@
+name: Generate Profile
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Read config
+        id: config
+        run: echo "username=$(node -e "console.log(require('./.github/profile.config.json').github.username)")" >> $GITHUB_OUTPUT
+
+      - name: Generate readme.source.md from config
+        run: node .github/scripts/generate-readme-source.js
+
+      - name: Generate unified profile SVG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALLOW_MOCK_DATA: 'false'
+        run: node .github/scripts/generate-profile.js
+
+      - name: Fail if profile SVG was not generated
+        run: test -s .github/assets/profile.svg
+
+      - name: Generate individual aura components + commit everything
+        uses: collectioneur/readme-aura@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
