@@ -7,13 +7,14 @@ query ($login: String!) {
   user(login: $login) {
     name
     createdAt
-    repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: STARGAZERS, direction: DESC}) {
+    repositories(first: 100, ownerAffiliations: [OWNER, COLLABORATOR], isFork: false, orderBy: {field: STARGAZERS, direction: DESC}) {
       totalCount
       nodes {
         name
         description
         stargazerCount
         forkCount
+        isPrivate
         primaryLanguage { name color }
         languages(first: 20, orderBy: {field: SIZE, direction: DESC}) {
           totalSize
