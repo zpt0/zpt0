@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates the entire profile as ONE single SVG
+// Generates the entire 6jt8 profile as ONE single SVG
 // Fetches real data from GitHub GraphQL API
 
 const QUERY = `
@@ -7,7 +7,7 @@ query ($login: String!) {
   user(login: $login) {
     name
     createdAt
-    repositories(first: 100, ownerAffiliations: OWNER, isFork: null, orderBy: {field: UPDATED_AT, direction: DESC}) {
+    repositories(first: 100, ownerAffiliations: OWNER, orderBy: {field: STARGAZERS, direction: DESC}) {
       totalCount
       nodes {
         name
@@ -15,30 +15,11 @@ query ($login: String!) {
         stargazerCount
         forkCount
         primaryLanguage { name color }
-        languages(first: 20, orderBy: {field: SIZE, direction: DESC}) {
-          totalSize
-          edges { size node { name color } }
-        }
         url
-      }
-    }
-    pinnedItems(first: 6, types: REPOSITORY) {
-      nodes {
-        ... on Repository {
-          name
-          description
-          stargazerCount
-          forkCount
-          primaryLanguage { name color }
-          url
-        }
       }
     }
     contributionsCollection {
       totalCommitContributions
-      totalIssueContributions
-      totalPullRequestContributions
-      totalPullRequestReviewContributions
       contributionCalendar {
         totalContributions
         weeks {
@@ -51,8 +32,7 @@ query ($login: String!) {
       }
     }
   }
-}
-`;
+}`;
 
 const YEARLY_QUERY = `
 query ($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -61,16 +41,7 @@ query ($login: String!, $from: DateTime!, $to: DateTime!) {
       totalCommitContributions
     }
   }
-}
-`;
-
-const _config = JSON.parse(require('node:fs').readFileSync(require('node:path').resolve(__dirname, '../profile.config.json'), 'utf-8'));
-
-function formatBytes(bytes) {
-  if (bytes >= 1_000_000) return `${(bytes / 1_000_000).toFixed(1)} MB`;
-  if (bytes >= 1_000) return `${(bytes / 1_000).toFixed(1)} KB`;
-  return `${bytes} B`;
-}
+}`;
 
 async function gql(token, query, variables) {
   const res = await fetch('https://api.github.com/graphql', {
@@ -78,7 +49,7 @@ async function gql(token, query, variables) {
     headers: {
       Authorization: `bearer ${token}`,
       'Content-Type': 'application/json',
-      'User-Agent': `${_config.github.username}-profile`,
+      'User-Agent': '6jt8-readme',
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -114,69 +85,36 @@ function processData(user) {
   const totalForks = repos.reduce((s, r) => s + r.forkCount, 0);
   const totalRepos = user.repositories.totalCount;
   const totalCommits = user._allTimeCommits || user.contributionsCollection.totalCommitContributions;
-  const totalContributions = user.contributionsCollection.contributionCalendar.totalContributions;
 
   const langMap = {};
   for (const r of repos) {
-    const edges = r.languages?.edges || [];
-    for (const edge of edges) {
-      const node = edge.node;
-      if (!node) continue;
-      const name = node.name;
-      const size = edge.size || 0;
-      if (!langMap[name]) langMap[name] = { name, color: node.color || '#555', size: 0, repos: 0 };
-      langMap[name].size += size;
-      langMap[name].repos += 1;
+    if (r.primaryLanguage) {
+      const name = r.primaryLanguage.name;
+      if (!langMap[name]) langMap[name] = { name, color: r.primaryLanguage.color, count: 0 };
+      langMap[name].count++;
     }
   }
-  const langArr = Object.values(langMap).sort((a, b) => b.size - a.size).slice(0, 10);
-  const totalLangSize = langArr.reduce((s, l) => s + l.size, 0);
-  const languages = langArr.map(l => ({ ...l, percentage: Math.round((l.size / (totalLangSize || 1)) * 100) }));
-  const learning = _config.profile.learning;
+  const langArr = Object.values(langMap).sort((a, b) => b.count - a.count).slice(0, 10);
+  const totalLang = langArr.reduce((s, l) => s + l.count, 0);
+  const languages = langArr.map(l => ({ ...l, percentage: Math.round((l.count / (totalLang || 1)) * 100) }));
 
-  const projectsMode = _config.projects.mode;
-  let topProjects;
-  if (projectsMode === 'custom') {
-    topProjects = _config.projects.custom.map(p => ({
-      name: p.name,
-      desc: p.description,
-      stars: 0,
-      forks: 0,
-      lang: p.tech[0]?.label || null,
-      langColor: p.tech[0]?.color || '#555',
-      url: `https://github.com/${_config.github.username}/${p.name}`,
-    }));
-  } else if (projectsMode === 'pinned') {
-    const pinned = user.pinnedItems?.nodes || [];
-    topProjects = pinned.slice(0, 3).map(r => ({
+  const topProjects = repos
+    .filter(r => r.name && r.description)
+    .sort((a, b) => b.stargazerCount - a.stargazerCount)
+    .slice(0, 3)
+    .map(r => ({
       name: r.name,
-      desc: r.description || '',
+      desc: r.description,
       stars: r.stargazerCount,
       forks: r.forkCount,
       lang: r.primaryLanguage ? r.primaryLanguage.name : null,
       langColor: r.primaryLanguage ? r.primaryLanguage.color : '#555',
       url: r.url,
     }));
-  } else {
-    topProjects = repos
-      .filter(r => r.name && r.description)
-      .sort((a, b) => b.stargazerCount - a.stargazerCount)
-      .slice(0, 3)
-      .map(r => ({
-        name: r.name,
-        desc: r.description,
-        stars: r.stargazerCount,
-        forks: r.forkCount,
-        lang: r.primaryLanguage ? r.primaryLanguage.name : null,
-        langColor: r.primaryLanguage ? r.primaryLanguage.color : '#555',
-        url: r.url,
-      }));
-  }
 
   return {
-    stats: { totalStars, totalForks, totalRepos: Math.min(totalRepos, 12), totalCommits, totalContributions },
+    stats: { totalStars, totalForks, totalRepos, totalCommits },
     languages,
-    learning,
     topProjects,
     calendar: user.contributionsCollection.contributionCalendar,
   };
@@ -278,20 +216,20 @@ function generateSVG(data) {
       <circle class="g-dot" cx="60" cy="${cy-65}" r="2" fill="#7ee7ff"/>
       <circle class="g-dot" cx="740" cy="${cy+45}" r="2" fill="#e8c8ff" style="animation-delay:1.5s"/>
       <circle class="g-dot" cx="700" cy="${cy-50}" r="1.5" fill="#ff88cc" style="animation-delay:2.5s"/>
-      <text x="400" y="${cy-48}" text-anchor="middle" font-family="${font}" font-size="48" font-weight="900" fill="#ffffff" letter-spacing="20" filter="url(#glow)">${_config.profile.name}</text>
-      <text x="400" y="${cy-8}" text-anchor="middle" font-family="${font}" font-size="11" fill="rgba(126,231,255,0.9)" letter-spacing="6" font-weight="700">${_config.profile.heroTitle.toUpperCase()}</text>
+      <text x="400" y="${cy-48}" text-anchor="middle" font-family="${font}" font-size="48" font-weight="900" fill="#ffffff" letter-spacing="20" filter="url(#glow)">6jt8</text>
+      <text x="400" y="${cy-8}" text-anchor="middle" font-family="${font}" font-size="11" fill="rgba(126,231,255,0.9)" letter-spacing="6" font-weight="700">FULLSTACK DEVELOPER</text>
       <line x1="260" y1="${cy+10}" x2="540" y2="${cy+10}" stroke="rgba(126,231,255,0.25)" stroke-width="1" filter="url(#glow)"/>
-      <text x="400" y="${cy+35}" text-anchor="middle" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.8)" letter-spacing="3" font-weight="600">${_config.profile.heroTags.map(t => t.label.toUpperCase()).join('  |  ')}</text>
-      <text x="400" y="${cy+60}" text-anchor="middle" font-family="${font}" font-size="9.5" fill="rgba(126,231,255,0.6)" letter-spacing="2" font-weight="500">${_config.profile.heroTagline.toUpperCase()}</text>
-      <text x="400" y="${cy+85}" text-anchor="middle" font-family="${font}" font-size="9" fill="rgba(100,100,140,0.5)" letter-spacing="1.5">github.com/${_config.github.username}</text>
+      <text x="400" y="${cy+35}" text-anchor="middle" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.8)" letter-spacing="3" font-weight="600">TYPESCRIPT  |  REACT  |  PYTHON  |  RUST</text>
+      <text x="400" y="${cy+60}" text-anchor="middle" font-family="${font}" font-size="9.5" fill="rgba(126,231,255,0.6)" letter-spacing="2" font-weight="500">BUILDING CLEAN TOOLS  \u2022  AUTOMATING WORKFLOWS  \u2022  SHIPPING SMALL PROJECTS</text>
+      <text x="400" y="${cy+85}" text-anchor="middle" font-family="${font}" font-size="9" fill="rgba(100,100,140,0.5)" letter-spacing="1.5">github.com/6jt8</text>
     </g>`;
   })();
   y += heroH + gap;
 
   const techStack = (() => {
     const baseY = y;
-    const techs = data.languages.slice(0, 8).map(l => l.name);
-    const colors = data.languages.slice(0, 8).map(l => l.color);
+    const techs = ['TypeScript', 'React', 'Python', 'Rust', 'JavaScript', 'HTML', 'CSS', 'Svelte'];
+    const colors = ['#3178c6', '#61dafb', '#3572A5', '#dea584', '#f1e05a', '#e34c26', '#663399', '#ff3e00'];
     let pills = '';
     let totalPillW = 0;
     const pillWidths = techs.map(t => t.length * 7.5 + 26);
@@ -322,7 +260,7 @@ function generateSVG(data) {
       { val: s.totalStars, label: 'STARS', color: '#ffcc33' },
       { val: s.totalForks, label: 'FORKS', color: '#e8c8ff' },
       { val: s.totalRepos, label: 'REPOS', color: '#7ee7ff' },
-      { val: s.totalContributions, label: 'CONTRIBS', color: '#ff88cc' },
+      { val: s.totalCommits, label: 'COMMITS', color: '#ff88cc' },
     ];
     let cols = '';
     const colW = 170;
@@ -351,7 +289,6 @@ function generateSVG(data) {
   const langs = (() => {
     const baseY = y;
     const ll = data.languages;
-    const learning = data.learning || [];
     const barW = 720;
     const barX = 40;
     const barY = baseY + 42;
@@ -376,20 +313,17 @@ function generateSVG(data) {
       <g>
         <circle cx="${lx+5}" cy="${ly+6}" r="4.5" fill="${l.color}" opacity="0.9"/>
         <text x="${lx+15}" y="${ly+10}" font-family="${font}" font-size="11" font-weight="700" fill="rgba(240,240,255,0.95)">${l.name}</text>
+        <text x="${lx+15 + l.name.length*6.5 + 6}" y="${ly+10}" font-family="${font}" font-size="9.5" fill="rgba(180,180,210,0.6)" font-weight="500">${l.percentage}%</text>
       </g>`;
     });
-
-    const learningText = learning.length ? learning.join('  \u2022  ') : '';
-    const learningY = barY + 118;
 
     return `
     <g>
       <line x1="28" y1="${baseY}" x2="772" y2="${baseY}" stroke="rgba(110,80,220,0.15)" stroke-width="0.8"/>
       <ellipse class="g-dr" cx="650" cy="${baseY+100}" rx="180" ry="100" fill="url(#g5)"/>
-      <text x="${barX}" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">CODE STACK</text>
+      <text x="${barX}" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">STACK ANALYTICS</text>
       ${bar}
       ${legend}
-      <text x="${barX}" y="${learningY}" font-family="${font}" font-size="9.5" fill="rgba(232,200,255,0.75)" font-weight="700">CURRENTLY LEARNING: ${learningText}</text>
     </g>`;
   })();
   y += langH + gap;
@@ -397,13 +331,14 @@ function generateSVG(data) {
   const calendar = (() => {
     const baseY = y;
     const weeks = data.calendar.weeks;
-    const cellSize = 11;
+    const cellSize = 10;
     const cgap = 2;
     const step = cellSize + cgap;
-    const gridX = 28;
-    const gridY = baseY + 36;
+    const gridX = 55;
+    const gridY = baseY + 40;
     const colors = ['rgba(25,25,45,0.7)', 'rgba(45,74,110,0.85)', 'rgba(74,126,200,0.9)', 'rgba(126,231,255,0.95)', '#ffffff'];
-    const maxWeeks = Math.min(weeks.length, Math.floor((W - gridX - 28) / step));
+
+    const maxWeeks = Math.min(weeks.length, Math.floor((W - gridX - 30) / step));
     const displayWeeks = weeks.slice(weeks.length - maxWeeks);
 
     let cells = '';
@@ -420,7 +355,7 @@ function generateSVG(data) {
     return `
     <g>
       <line x1="28" y1="${baseY}" x2="772" y2="${baseY}" stroke="rgba(110,80,220,0.15)" stroke-width="0.8"/>
-      <text x="40" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">GITHUB ACTIVITY</text>
+      <text x="40" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">ACTIVITY PULSE</text>
       <text x="760" y="${baseY+22}" text-anchor="end" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.65)" font-weight="700">${data.calendar.totalContributions} contributions</text>
       ${cells}
     </g>`;
@@ -483,13 +418,13 @@ function generateSVG(data) {
     <g>
       <line x1="28" y1="${baseY}" x2="772" y2="${baseY}" stroke="rgba(110,80,220,0.15)" stroke-width="0.8"/>
       <ellipse class="g-du" cx="400" cy="${baseY+110}" rx="260" ry="75" fill="url(#g3)" opacity="0.5"/>
-      <text x="40" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">FEATURED PROJECTS</text>
+      <text x="40" y="${baseY+22}" font-family="${font}" font-size="10" fill="rgba(126,231,255,0.85)" letter-spacing="4" font-weight="800">PRIMARY DEPLOYMENTS</text>
       ${cards}
     </g>`;
   })();
   y += projH;
 
-  return `<!-- ${_config.profile.name} Profile | Generated ${new Date().toISOString()} -->
+  return `<!-- 6jt8 Profile | Enhanced | Generated ${new Date().toISOString()} -->
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${totalH}" viewBox="0 0 ${W} ${totalH}">
 <style>${style}</style>
 <defs>${defs}</defs>
@@ -502,7 +437,7 @@ ${statsBlock}
 ${langs}
 ${calendar}
 ${projects}
-<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">${_config.profile.footer}</text>
+<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">6JT8 \u2022 FULLSTACK DEVELOPER \u2022 TYPESCRIPT REACT PYTHON RUST</text>
 </svg>`;
 }
 
@@ -517,25 +452,26 @@ function mockData() {
     weeks.push({ contributionDays: days });
   }
   return {
-    stats: { totalStars: 12, totalForks: 5, totalRepos: 8, totalCommits: 847, totalContributions: 847 },
+    stats: { totalStars: 12, totalForks: 5, totalRepos: 24, totalCommits: 847 },
     languages: [
-      { name: 'TypeScript', color: '#3178c6', size: 26000, repos: 4, percentage: 26 },
-      { name: 'Python', color: '#3572A5', size: 24000, repos: 3, percentage: 24 },
-      { name: 'C#', color: '#178600', size: 22000, repos: 2, percentage: 22 },
-      { name: 'Rust', color: '#dea584', size: 18000, repos: 2, percentage: 18 },
-      { name: 'Kotlin', color: '#A97BFF', size: 10000, repos: 1, percentage: 10 },
+      { name: 'TypeScript', color: '#3178c6', percentage: 35 },
+      { name: 'Python', color: '#3572A5', percentage: 20 },
+      { name: 'Rust', color: '#dea584', percentage: 15 },
+      { name: 'JavaScript', color: '#f1e05a', percentage: 12 },
+      { name: 'HTML', color: '#e34c26', percentage: 8 },
+      { name: 'CSS', color: '#663399', percentage: 5 },
+      { name: 'Svelte', color: '#ff3e00', percentage: 5 },
     ],
-    learning: ['Kotlin', 'Node.js APIs', 'Clean Architecture', 'Automation'],
     topProjects: [
-      { name: '6jt8', desc: 'Profile, automation and small developer experiments', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
-      { name: 'Tools', desc: 'Useful scripts and lightweight tooling for daily workflows', stars: 0, forks: 0, lang: 'Python', langColor: '#3572A5' },
-      { name: 'Learning', desc: 'Kotlin, C# and Rust experiments while building skills', stars: 0, forks: 0, lang: 'Rust', langColor: '#dea584' },
+      { name: 'DC-Lyra', desc: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
+      { name: 'devinspire', desc: 'Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.', stars: 0, forks: 0, lang: 'JavaScript', langColor: '#f1e05a' },
+      { name: 'nightcord', desc: 'Everything Discord doesn\'t build, we create. Custom Discord tools and utilities for server management.', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
     ],
     calendar: { totalContributions: 847, weeks },
   };
 }
 
-const username = process.env.GITHUB_USER || _config.github.username;
+const username = process.env.GITHUB_USER || '6jt8';
 const token = process.env.GITHUB_TOKEN;
 
 (async () => {
@@ -551,12 +487,7 @@ const token = process.env.GITHUB_TOKEN;
       data = processData(user);
     } catch (e) {
       console.error(`Error: ${e.message}`);
-      if (process.env.ALLOW_MOCK_DATA === 'true') {
-        console.error('Using mock data because ALLOW_MOCK_DATA=true.');
-        data = mockData();
-      } else {
-        throw e;
-      }
+      data = mockData();
     }
   } else {
     console.log('No GITHUB_TOKEN — using mock data for preview.');

@@ -3,5 +3,5 @@
 </p>
 
 <p align="center">
-  <img src="./.github/assets/profile.svg" alt="6jt8 Profile" />
+<img src="./.github/assets/profile.svg" alt="6jt8 Profile" />
 </p>
