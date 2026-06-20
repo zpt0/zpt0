@@ -15,6 +15,10 @@ query ($login: String!) {
         stargazerCount
         forkCount
         primaryLanguage { name color }
+        languages(first: 20, orderBy: {field: SIZE, direction: DESC}) {
+          totalSize
+          edges { size node { name color } }
+        }
         url
       }
     }
@@ -86,17 +90,23 @@ function processData(user) {
   const totalRepos = user.repositories.totalCount;
   const totalCommits = user._allTimeCommits || user.contributionsCollection.totalCommitContributions;
 
+  // Aggregate languages by actual byte size across all repos
   const langMap = {};
   for (const r of repos) {
-    if (r.primaryLanguage) {
-      const name = r.primaryLanguage.name;
-      if (!langMap[name]) langMap[name] = { name, color: r.primaryLanguage.color, count: 0 };
-      langMap[name].count++;
+    const edges = r.languages?.edges || [];
+    for (const edge of edges) {
+      const node = edge.node;
+      if (!node) continue;
+      const name = node.name;
+      const size = edge.size || 0;
+      if (!langMap[name]) langMap[name] = { name, color: node.color || '#555', size: 0, repos: 0 };
+      langMap[name].size += size;
+      langMap[name].repos += 1;
     }
   }
-  const langArr = Object.values(langMap).sort((a, b) => b.count - a.count).slice(0, 10);
-  const totalLang = langArr.reduce((s, l) => s + l.count, 0);
-  const languages = langArr.map(l => ({ ...l, percentage: Math.round((l.count / (totalLang || 1)) * 100) }));
+  const langArr = Object.values(langMap).sort((a, b) => b.size - a.size).slice(0, 10);
+  const totalLangSize = langArr.reduce((s, l) => s + l.size, 0);
+  const languages = langArr.map(l => ({ ...l, percentage: Math.round((l.size / (totalLangSize || 1)) * 100) }));
 
   const topProjects = repos
     .filter(r => r.name && r.description)
@@ -219,7 +229,7 @@ function generateSVG(data) {
       <text x="400" y="${cy-48}" text-anchor="middle" font-family="${font}" font-size="48" font-weight="900" fill="#ffffff" letter-spacing="20" filter="url(#glow)">6jt8</text>
       <text x="400" y="${cy-8}" text-anchor="middle" font-family="${font}" font-size="11" fill="rgba(126,231,255,0.9)" letter-spacing="6" font-weight="700">FULLSTACK DEVELOPER</text>
       <line x1="260" y1="${cy+10}" x2="540" y2="${cy+10}" stroke="rgba(126,231,255,0.25)" stroke-width="1" filter="url(#glow)"/>
-      <text x="400" y="${cy+35}" text-anchor="middle" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.8)" letter-spacing="3" font-weight="600">TYPESCRIPT  |  REACT  |  PYTHON  |  RUST</text>
+      <text x="400" y="${cy+35}" text-anchor="middle" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.8)" letter-spacing="3" font-weight="600">${data.languages.slice(0, 4).map(l => l.name.toUpperCase()).join('  |  ')}</text>
       <text x="400" y="${cy+60}" text-anchor="middle" font-family="${font}" font-size="9.5" fill="rgba(126,231,255,0.6)" letter-spacing="2" font-weight="500">BUILDING CLEAN TOOLS  \u2022  AUTOMATING WORKFLOWS  \u2022  SHIPPING SMALL PROJECTS</text>
       <text x="400" y="${cy+85}" text-anchor="middle" font-family="${font}" font-size="9" fill="rgba(100,100,140,0.5)" letter-spacing="1.5">github.com/6jt8</text>
     </g>`;
@@ -228,8 +238,8 @@ function generateSVG(data) {
 
   const techStack = (() => {
     const baseY = y;
-    const techs = ['TypeScript', 'React', 'Python', 'Rust', 'JavaScript', 'HTML', 'CSS', 'Svelte'];
-    const colors = ['#3178c6', '#61dafb', '#3572A5', '#dea584', '#f1e05a', '#e34c26', '#663399', '#ff3e00'];
+    const techs = data.languages.slice(0, 8).map(l => l.name);
+    const colors = data.languages.slice(0, 8).map(l => l.color);
     let pills = '';
     let totalPillW = 0;
     const pillWidths = techs.map(t => t.length * 7.5 + 26);
@@ -237,10 +247,9 @@ function generateSVG(data) {
     let px = (W - totalPillW) / 2;
     techs.forEach((t, i) => {
       const w = pillWidths[i];
-      const strokeRgb = colors[i] === '#7ee7ff' ? '126,231,255' : colors[i] === '#e8c8ff' ? '232,200,255' : '255,136,204';
       pills += `
       <g>
-        <rect x="${px}" y="${baseY+20}" width="${w}" height="26" rx="13" fill="rgba(15,12,28,0.85)" stroke="rgba(${strokeRgb},0.3)" stroke-width="1"/>
+        <rect x="${px}" y="${baseY+20}" width="${w}" height="26" rx="13" fill="rgba(15,12,28,0.85)" stroke="rgba(${hexToRgb(colors[i])},0.3)" stroke-width="1"/>
         <text x="${px + w/2}" y="${baseY+38}" text-anchor="middle" font-family="${font}" font-size="11" font-weight="700" fill="${colors[i]}">${t}</text>
       </g>`;
       px += w + 8;
@@ -376,7 +385,7 @@ function generateSVG(data) {
       const cx = startX + i * (cardW + cardGap);
       const cy = baseY + 30;
       const accent = cardColors[i % 3];
-      const strokeRgb = accent === '#7ee7ff' ? '126,231,255' : accent === '#e8c8ff' ? '232,200,255' : '255,136,204';
+      const strokeRgb = hexToRgb(accent);
 
       const desc = (p.desc || '').substring(0, 90);
       const words = desc.split(' ');
@@ -437,8 +446,13 @@ ${statsBlock}
 ${langs}
 ${calendar}
 ${projects}
-<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">6JT8 \u2022 FULLSTACK DEVELOPER \u2022 TYPESCRIPT REACT PYTHON RUST</text>
+<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">6JT8 \u2022 FULLSTACK DEVELOPER \u2022 ${data.languages.slice(0, 4).map(l => l.name.toUpperCase()).join(' \u2022 ')}</text>
 </svg>`;
+}
+
+function hexToRgb(hex) {
+  const h = hex.replace('#', '');
+  return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
 }
 
 function mockData() {
@@ -454,13 +468,13 @@ function mockData() {
   return {
     stats: { totalStars: 12, totalForks: 5, totalRepos: 24, totalCommits: 847 },
     languages: [
-      { name: 'TypeScript', color: '#3178c6', percentage: 35 },
-      { name: 'Python', color: '#3572A5', percentage: 20 },
-      { name: 'Rust', color: '#dea584', percentage: 15 },
-      { name: 'JavaScript', color: '#f1e05a', percentage: 12 },
-      { name: 'HTML', color: '#e34c26', percentage: 8 },
-      { name: 'CSS', color: '#663399', percentage: 5 },
-      { name: 'Svelte', color: '#ff3e00', percentage: 5 },
+      { name: 'TypeScript', color: '#3178c6', size: 35000, repos: 5, percentage: 35 },
+      { name: 'Python', color: '#3572A5', size: 20000, repos: 3, percentage: 20 },
+      { name: 'Rust', color: '#dea584', size: 15000, repos: 2, percentage: 15 },
+      { name: 'JavaScript', color: '#f1e05a', size: 12000, repos: 4, percentage: 12 },
+      { name: 'HTML', color: '#e34c26', size: 8000, repos: 4, percentage: 8 },
+      { name: 'CSS', color: '#663399', size: 5000, repos: 3, percentage: 5 },
+      { name: 'Svelte', color: '#ff3e00', size: 5000, repos: 1, percentage: 5 },
     ],
     topProjects: [
       { name: 'DC-Lyra', desc: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
