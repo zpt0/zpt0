@@ -1,0 +1,10 @@
+{
+  "name": "cyberpunk-aura",
+  "version": "1.0.0",
+  "entry": "generator.js",
+  "output": {
+    "assetsDir": "assets",
+    "readmePath": "../../../README.md"
+  },
+  "capabilities": ["fetch-github-data", "write-assets", "write-readme"]
+}

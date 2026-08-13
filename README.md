@@ -3,5 +3,5 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/assets/profile.svg" alt="zpt0 Profile" />
+<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/cyberpunk-aura/assets/profile.svg" alt="zpt0 Profile" />
 </p>
