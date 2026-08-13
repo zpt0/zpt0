@@ -1,1 +1,2 @@
-.github/assets/*.svg
+# Generated SVG assets from all plugins
+.github/readmes/*/assets/*.svg
