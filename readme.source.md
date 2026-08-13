@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=6jt8&label=Profile%20views&color=0e75b6&style=flat" alt="6jt8" />
+  <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="zpt0" />
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/6jt8/6jt8/main/.github/assets/profile.svg" alt="6jt8 Profile" />
+<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/assets/profile.svg" alt="zpt0 Profile" />
 </p>

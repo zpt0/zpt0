@@ -26,12 +26,12 @@ jobs:
       - name: Generate unified profile SVG
         env:
           GITHUB_TOKEN: ${{ secrets.METRICTOKEN }}
-          GITHUB_USER: 6jt8
+          GITHUB_USER: zpt0
         run: node .github/scripts/generate-profile.js
 
       - name: Set README to single profile SVG
         run: |
-          printf '<p align="center">\n  <img src="https://komarev.com/ghpvc/?username=6jt8&label=Profile%%20views&color=0e75b6&style=flat" alt="6jt8" />\n</p>\n\n<p align="center">\n<img src="https://raw.githubusercontent.com/6jt8/6jt8/main/.github/assets/profile.svg" alt="6jt8 Profile" />\n</p>\n' > README.md
+          printf '<p align="center">\n  <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%%20views&color=0e75b6&style=flat" alt="zpt0" />\n</p>\n\n<p align="center">\n<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/assets/profile.svg" alt="zpt0 Profile" />\n</p>\n' > README.md
 
       - name: Commit and push
         run: |

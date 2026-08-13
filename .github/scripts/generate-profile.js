@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates the entire 6jt8 profile as ONE single SVG
+// Generates the entire zpt0 profile as ONE single SVG
 // Fetches real data from GitHub GraphQL API
 
 const QUERY = `
@@ -54,7 +54,7 @@ async function gql(token, query, variables) {
     headers: {
       Authorization: `bearer ${token}`,
       'Content-Type': 'application/json',
-      'User-Agent': '6jt8-readme',
+      'User-Agent': 'zpt0-readme',
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -227,12 +227,12 @@ function generateSVG(data) {
       <circle class="g-dot" cx="60" cy="${cy-65}" r="2" fill="#7ee7ff"/>
       <circle class="g-dot" cx="740" cy="${cy+45}" r="2" fill="#e8c8ff" style="animation-delay:1.5s"/>
       <circle class="g-dot" cx="700" cy="${cy-50}" r="1.5" fill="#ff88cc" style="animation-delay:2.5s"/>
-      <text x="400" y="${cy-48}" text-anchor="middle" font-family="${font}" font-size="48" font-weight="900" fill="#ffffff" letter-spacing="20" filter="url(#glow)">6jt8</text>
+      <text x="400" y="${cy-48}" text-anchor="middle" font-family="${font}" font-size="48" font-weight="900" fill="#ffffff" letter-spacing="20" filter="url(#glow)">zpt0</text>
       <text x="400" y="${cy-8}" text-anchor="middle" font-family="${font}" font-size="11" fill="rgba(126,231,255,0.9)" letter-spacing="6" font-weight="700">FULLSTACK DEVELOPER</text>
       <line x1="260" y1="${cy+10}" x2="540" y2="${cy+10}" stroke="rgba(126,231,255,0.25)" stroke-width="1" filter="url(#glow)"/>
       <text x="400" y="${cy+35}" text-anchor="middle" font-family="${font}" font-size="10" fill="rgba(232,200,255,0.8)" letter-spacing="3" font-weight="600">${data.languages.slice(0, 4).map(l => l.name.toUpperCase()).join('  |  ')}</text>
       <text x="400" y="${cy+60}" text-anchor="middle" font-family="${font}" font-size="9.5" fill="rgba(126,231,255,0.6)" letter-spacing="2" font-weight="500">BUILDING CLEAN TOOLS  \u2022  AUTOMATING WORKFLOWS  \u2022  SHIPPING SMALL PROJECTS</text>
-      <text x="400" y="${cy+85}" text-anchor="middle" font-family="${font}" font-size="9" fill="rgba(100,100,140,0.5)" letter-spacing="1.5">github.com/6jt8</text>
+      <text x="400" y="${cy+85}" text-anchor="middle" font-family="${font}" font-size="9" fill="rgba(100,100,140,0.5)" letter-spacing="1.5">github.com/zpt0</text>
     </g>`;
   })();
   y += heroH + gap;
@@ -434,7 +434,7 @@ function generateSVG(data) {
   })();
   y += projH;
 
-  return `<!-- 6jt8 Profile | Enhanced | Generated ${new Date().toISOString()} -->
+  return `<!-- zpt0 Profile | Enhanced | Generated ${new Date().toISOString()} -->
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${totalH}" viewBox="0 0 ${W} ${totalH}">
 <style>${style}</style>
 <defs>${defs}</defs>
@@ -447,7 +447,7 @@ ${statsBlock}
 ${langs}
 ${calendar}
 ${projects}
-<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">6JT8 \u2022 FULLSTACK DEVELOPER \u2022 ${data.languages.slice(0, 4).map(l => l.name.toUpperCase()).join(' \u2022 ')}</text>
+<text x="400" y="${totalH-16}" text-anchor="middle" font-family="${font}" font-size="8.5" fill="rgba(100,100,150,0.45)" font-weight="600" letter-spacing="2">zpt0 \u2022 FULLSTACK DEVELOPER \u2022 ${data.languages.slice(0, 4).map(l => l.name.toUpperCase()).join(' \u2022 ')}</text>
 </svg>`;
 }
 
@@ -486,7 +486,7 @@ function mockData() {
   };
 }
 
-const username = process.env.GITHUB_USER || '6jt8';
+const username = process.env.GITHUB_USER || 'zpt0';
 const token = process.env.GITHUB_TOKEN;
 
 (async () => {
