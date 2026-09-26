@@ -223,6 +223,44 @@ function renderToolsLine(tools, label) {
     return out + '\n\n';
   }
 
+  function renderSkillsTable(techStack) {
+    const categories = [
+      { key: 'Languages', emoji: '💻', skills: techStack.Languages || [] },
+      { key: 'Hardware', emoji: '🔩', skills: techStack.Hardware || [] },
+      { key: 'Security', emoji: '🛡️', skills: techStack.Security || [] },
+    ].filter(c => c.skills.length > 0);
+
+    if (categories.length === 0) return '';
+
+    const maxBar = 12;
+    const maxRows = Math.max(...categories.map(c => c.skills.length));
+
+    let md = `## \`> skills --list\`\n\n`;
+    md += `<p align="center">\n\n`;
+
+    // Table header
+    md += '| ' + categories.map(c => `${c.emoji} ${c.key}`).join(' | ') + ' |\n';
+    md += '| ' + categories.map(() => '---').join(' | ') + ' |\n';
+
+    for (let row = 0; row < maxRows; row++) {
+      const cells = categories.map(c => {
+        if (row < c.skills.length) {
+          const s = c.skills[row];
+          const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
+          const empty = maxBar - filled;
+          const bar = '█'.repeat(filled) + '░'.repeat(empty);
+          const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
+          return `${escMd(s.name).padEnd(18)} ${bar} ${stars}`;
+        }
+        return '';
+      });
+      md += '| ' + cells.join(' | ') + ' |\n';
+    }
+
+    md += '\n</p>\n\n';
+    return md;
+  }
+
   // SVG banner (colored, works on GitHub)
   const bannerUrl = `${base}/banner.svg`;
 
@@ -232,7 +270,7 @@ function renderToolsLine(tools, label) {
   md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
   md += `</p>\n\n`;
 
-  // Colored SVG banner
+  // Colored SVG banner (centered)
   md += `<p align="center">\n`;
   md += `  <img src="${bannerUrl}" alt="zpt0" width="600" />\n`;
   md += `</p>\n\n`;
@@ -267,12 +305,9 @@ function renderToolsLine(tools, label) {
     md += '```\n\n';
   }
 
-  // Tech Stack - separate categories like Nexus
+  // Tech Stack - 3-column table like Nexus
   if (techStack && Object.keys(techStack).length) {
-    md += `## \`> skills --list\`\n\n`;
-    if (techStack.Languages) md += renderSkillCategory('💻', 'Languages', techStack.Languages);
-    if (techStack.Hardware) md += renderSkillCategory('🔩', 'Hardware', techStack.Hardware);
-    if (techStack.Security) md += renderSkillCategory('🛡️', 'Security', techStack.Security);
+    md += renderSkillsTable(techStack);
     if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
   }
 
@@ -289,12 +324,14 @@ function renderToolsLine(tools, label) {
     md += '```\n\n';
   }
 
-  // Activity widget
+  // Activity widget (centered)
   md += `## \`> cat ./dev_log.txt\`\n\n`;
+  md += `<p align="center">\n`;
   md += `<picture>\n`;
   md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
   md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
-  md += `</picture>\n\n`;
+  md += `</picture>\n`;
+  md += `</p>\n\n`;
 
   if (currently.length) {
     md += '```text\n';
@@ -320,14 +357,16 @@ function renderToolsLine(tools, label) {
     md += `\n</p>\n\n`;
   }
 
-  // Footer quote
+  // Footer quote (centered)
+  md += `<p align="center">\n`;
   md += `\`\`\`\n`;
   md += `╔═══════════════════════════════════════════════════════════╗\n`;
   md += `║  "Stay curious. Stay creative.                             ║\n`;
   md += `║   Always push the boundaries of what's possible."          ║\n`;
   md += `║                                              — ${escMd(displayName)}  ║\n`;
   md += `╚═══════════════════════════════════════════════════════════╝\n`;
-  md += `\`\`\`\n\n`;
+  md += `\`\`\`\n`;
+  md += `</p>\n\n`;
 
   md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
 
