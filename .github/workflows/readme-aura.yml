@@ -25,7 +25,7 @@ jobs:
 
       - name: Run plugin loader
         env:
-          GITHUB_TOKEN: ${{ secrets.METRICTOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           GITHUB_USER: zpt0
         run: node .github/core/loader.mjs
 
