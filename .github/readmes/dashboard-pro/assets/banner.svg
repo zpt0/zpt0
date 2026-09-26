@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="120" viewBox="0 0 600 120">
+  <rect width="600" height="120" fill="#0d1117"/>
+  <style>
+    .c1 { fill: #58a6ff; }
+    .c2 { fill: #1f6feb; }
+    .c3 { fill: #f0f6fc; }
+    .c4 { fill: #8b949e; }
+    .c5 { fill: #388bfd; }
+    .c6 { fill: #79c0ff; }
+    .banner-text { font-family: 'Monospace', 'Courier New', monospace; font-size: 11px; line-height: 1.17; white-space: pre; }
+  </style>
+  <text x="10" y="20" class="banner-text">
+    <tspan class="c1">┌</tspan><tspan class="c2">─────</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4"> </tspan><tspan class="c1">┌</tspan><tspan class="c2">─────</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4"> </tspan><tspan class="c1">┌</tspan><tspan class="c2">──────</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4"> </tspan><tspan class="c1">┌</tspan><tspan class="c2">─────</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan>
+  </text>
+  <text x="10" y="34" class="banner-text">
+    <tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─────</tspan><tspan class="c1">┘</tspan><tspan class="c4"> </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─────</tspan><tspan class="c1">┘</tspan><tspan class="c4"> </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">──────</tspan><tspan class="c1">┘</tspan><tspan class="c4"> </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─────</tspan><tspan class="c1">┘</tspan>
+  </text>
+  <text x="10" y="48" class="banner-text">
+    <tspan class="c3">  </tspan><tspan class="c2">┌─</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4">   </tspan><tspan class="c2">┌─────</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4"> </tspan><tspan class="c2">   ┌</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4">    </tspan><tspan class="c2">┌</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c5">┌</tspan><tspan class="c3">┐</tspan><tspan class="c2">┌</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan>
+  </text>
+  <text x="10" y="62" class="banner-text">
+    <tspan class="c2">┌─┘</tspan><tspan class="c1">┌</tspan><tspan class="c2">─</tspan><tspan class="c1">┘</tspan><tspan class="c4">   </tspan><tspan class="c2">│</tspan><tspan class="c3"> </tspan><tspan class="c2">┌────</tspan><tspan class="c1">┘</tspan><tspan class="c4"> </tspan><tspan class="c2">   │</tspan><tspan class="c3"> </tspan><tspan class="c1">│</tspan><tspan class="c4">    </tspan><tspan class="c2">│</tspan><tspan class="c3"> </tspan><tspan class="c5">│</tspan><tspan class="c3">└</tspan><tspan class="c1">┘</tspan><tspan class="c2">│</tspan><tspan class="c3"> </tspan><tspan class="c1">│</tspan>
+  </text>
+  <text x="10" y="76" class="banner-text">
+    <tspan class="c1">│</tspan><tspan class="c2">  </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─</tspan><tspan class="c1">─</tspan><tspan class="c3">┐</tspan><tspan class="c4"> </tspan><tspan class="c1">│</tspan><tspan class="c3"> </tspan><tspan class="c2">│</tspan><tspan class="c4">      </tspan><tspan class="c2">   </tspan><tspan class="c1">│</tspan><tspan class="c2"> </tspan><tspan class="c2">│</tspan><tspan class="c4">    </tspan><tspan class="c1">│</tspan><tspan class="c3"> </tspan><tspan class="c2">└──┘</tspan><tspan class="c3"> </tspan><tspan class="c2">│</tspan>
+  </text>
+  <text x="10" y="90" class="banner-text">
+    <tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─────</tspan><tspan class="c1">┘</tspan><tspan class="c4"> </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">┘</tspan><tspan class="c4">      </tspan><tspan class="c2">   </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">┘</tspan><tspan class="c4">    </tspan><tspan class="c3">└</tspan><tspan class="c1">─</tspan><tspan class="c2">─────┘</tspan>
+  </text>
+</svg>

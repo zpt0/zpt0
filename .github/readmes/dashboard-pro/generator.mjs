@@ -3,6 +3,13 @@
 // Plugin entry: exports async generate(ctx). Reuses core/api.mjs for data.
 
 import { QUERY as API_QUERY, gql, fetchAllTimeCommits, processData, mockData } from '../../core/api.mjs';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const BANNER_SVG = readFileSync(join(__dirname, 'assets/banner.svg'), 'utf8');
 
 const PROFILE_QUERY = API_QUERY.replace(
   '    name\n    createdAt',
@@ -209,19 +216,15 @@ function readReadme(ctx, data, profile) {
     return out;
   }
 
-  function renderToolsLine(tools, label) {
+function renderToolsLine(tools, label) {
     if (!tools || !tools.length) return '';
     let out = `**${escMd(label)}:** `;
     out += tools.map(t => `\`${escMd(t.name)}\``).join(' ');
     return out + '\n\n';
   }
 
-  const asciiBanner = `<pre style="font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.17;white-space:pre;background-color:#000;color:#fff;padding:8px;margin:0;"><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">──────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span>
-<span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">──────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span>
-<span style="color:#FFFFFF">  </span><span style="color:#0000AA">┌─</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">   </span><span style="color:#0000AA">┌─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#0000AA">   ┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">    </span><span style="color:#0000AA">┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#5555FF">┌</span><span style="color:#FFFFFF">┐</span><span style="color:#0000AA">┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span>
-<span style="color:#0000AA">┌─┘</span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA">   </span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">┌────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#0000AA">   │</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span><span style="color:#AAAAAA">    </span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">┘</span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span>
-<span style="color:#5555FF">│</span><span style="color:#0000AA">  </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">│</span><span style="color:#AAAAAA">      </span><span style="color:#0000AA">   </span><span style="color:#5555FF">│</span><span style="color:#0000AA"> │</span><span style="color:#AAAAAA">    </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">└──┘</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">│</span>
-<span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">┘</span><span style="color:#AAAAAA">      </span><span style="color:#0000AA">   </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">┘</span><span style="color:#AAAAAA">    </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────┘</span></pre>`;
+  // SVG banner (colored, works on GitHub)
+  const bannerUrl = `${base}/banner.svg`;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
@@ -229,8 +232,10 @@ function readReadme(ctx, data, profile) {
   md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
   md += `</p>\n\n`;
 
-  // ASCII banner
-  md += `${asciiBanner}\n\n`;
+  // Colored SVG banner
+  md += `<p align="center">\n`;
+  md += `  <img src="${bannerUrl}" alt="zpt0" width="600" />\n`;
+  md += `</p>\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
@@ -379,6 +384,7 @@ export async function generate(ctx) {
       { path: 'stats-dark.svg', content: statStrip(data, profile, 'dark') },
       { path: 'calendar.svg', content: activityCalendar(data, 'light') },
       { path: 'calendar-dark.svg', content: activityCalendar(data, 'dark') },
+      { path: 'banner.svg', content: BANNER_SVG },
     ],
     readme: readReadme(ctx, data, profile),
   };
