@@ -6,7 +6,7 @@ import {
   gql, QUERY, YEARLY_QUERY,
   fetchData, fetchAllTimeCommits,
   processData, mockData,
-} from '../../core/api.js';
+} from '../../core/api.mjs';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 

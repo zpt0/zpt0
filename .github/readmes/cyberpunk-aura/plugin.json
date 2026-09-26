@@ -1,7 +1,7 @@
 {
   "name": "cyberpunk-aura",
   "version": "1.0.0",
-  "entry": "generator.js",
+  "entry": "generator.mjs",
   "output": {
     "assetsDir": "assets",
     "readmePath": "../../../README.md"

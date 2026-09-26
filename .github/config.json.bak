@@ -1,0 +1,22 @@
+{
+  "activeDesign": "dashboard-pro",
+  "allowedDesigns": ["cyberpunk-aura", "dashboard-pro"],
+  "profile": {
+    "displayName": "zpt0",
+    "role": "Fullstack Developer",
+    "location": "",
+    "website": "https://github.com/zpt0",
+    "tagline": "Building clean tools, automating workflows, shipping small projects.",
+    "bio": "",
+    "currently": [],
+    "socials": [
+      { "label": "GitHub", "url": "https://github.com/zpt0" }
+    ],
+    "focusProjects": [
+      { "name": "DC-Lyra", "desc": "A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management", "url": "" },
+      { "name": "devinspire", "desc": "Spice up your GitHub README with random dev quotes. Custom styles, dynamic content.", "url": "" },
+      { "name": "nightcord", "desc": "Custom Discord tools and utilities for server management", "url": "" }
+    ],
+    "accent": "#0e75b6"
+  }
+}
