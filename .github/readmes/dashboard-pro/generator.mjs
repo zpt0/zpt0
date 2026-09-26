@@ -257,7 +257,7 @@ function buildHeader(ctx, profile) {
 }
 
 function buildStats(base) {
-  let md = `## 📊 Stats\n`;
+  let md = `## \`> stats --show\`\n\n`;
   md += `<picture>\n`;
   md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
   md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
