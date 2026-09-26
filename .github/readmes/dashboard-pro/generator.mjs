@@ -164,84 +164,128 @@ function activityCalendar(data, theme) {
 
 // ----- Markdown -----
 
-function readReadme(ctx, data, profile) {
-  const { repo, config } = ctx;
-  const user = ctx.user;
-  const accentHex = (profile.accent || '#0e75b6').replace('#', '');
-  const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
+  function readReadme(ctx, data, profile) {
+    const { repo, config } = ctx;
+    const user = ctx.user;
+    const accentHex = (profile.accent || '#0e75b6').replace('#', '');
+    const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
 
-  const displayName = profile.displayName || user;
-  const role = profile.role || '';
-  const tagline = profile.tagline || '';
-  const location = profile.location || '';
-  const website = profile.website || '';
-  const bio = profile.bio || '';
-  const currently = profile.currently || [];
-  const socials = profile.socials || [];
-  const projects = profile.focusProjects || data.topProjects || [];
+    const displayName = profile.displayName || user;
+    const role = profile.role || '';
+    const tagline = profile.tagline || '';
+    const location = profile.location || '';
+    const website = profile.website || '';
+    const bio = profile.bio || '';
+    const currently = profile.currently || [];
+    const socials = profile.socials || [];
+    const projects = profile.focusProjects || data.topProjects || [];
+    const techStack = profile.techStack || {};
 
-  const suffix = [location ? `📍 ${location}` : '', website ? `🔗 ${website}` : '']
-    .filter(Boolean).join(' · ');
+    const suffix = [location ? `📍 ${location}` : '', website ? `🔗 ${website}` : '']
+      .filter(Boolean).join(' · ');
 
-  let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
-
-  md += `<p align="center">\n`;
-  md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
-  md += `</p>\n\n`;
-
-  md += `# ${escMd(displayName)}\n`;
-  md += `**${escMd(role)}**${suffix ? `  \n${suffix}` : ''}\n\n`;
-  if (bio) md += `${escMd(bio)}\n\n`;
-  if (tagline) md += `> ${escMd(tagline)}\n\n`;
-
-  md += `## 📊 Stats\n`;
-  md += `<picture>\n`;
-  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
-  md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
-  md += `</picture>\n\n`;
-
-  if (data.languages && data.languages.length) {
-    md += `## 🛠️ Stack\n`;
-    md += `<p align="center">\n`;
-    for (const l of data.languages.slice(0, 10)) {
-      const color = (l.color || '#555').replace('#', '');
-      md += `<img src="https://img.shields.io/badge/${encodeURIComponent(l.name)}-${color}?style=for-the-badge" alt="${escMdAttr(l.name)}" />`;
+    function escMd(s) {
+      return String(s == null ? '' : s).replace(/\|/g, '\\|');
     }
-    md += `\n</p>\n\n`;
-  }
+    function escMdAttr(s) {
+      return String(s == null ? '' : s).replace(/"/g, '%22');
+    }
 
-  if (projects && projects.length) {
-    md += `## 🚀 What I'm building\n`;
-    for (const p of projects) {
-      const desc = p.desc || '';
-      if (p.url) {
-        md += `- [**${escMd(p.name)}**](${escUrl(p.url)}) — ${escMd(desc)}\n`;
-      } else {
-        md += `- **${escMd(p.name)}** — ${escMd(desc)}\n`;
+    function renderSkillBars(skills) {
+      const maxBar = 12;
+      let out = '';
+      for (const s of skills) {
+        const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
+        const empty = maxBar - filled;
+        const bar = '█'.repeat(filled) + '░'.repeat(empty);
+        const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
+        out += `${escMd(s.name).padEnd(22)} ${bar}  ${stars}\n`;
       }
+      return out ? `\`\`\`text\n${out}\`\`\`\n` : '';
     }
-    md += `\n`;
-  }
 
-  md += `## 📈 Activity\n`;
-  md += `<picture>\n`;
-  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
-  md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
-  md += `</picture>\n\n`;
+    function renderTools(tools) {
+      let out = '';
+      for (const t of tools) {
+        out += `- **${escMd(t.name)}** — ${escMd(t.type)}\n`;
+      }
+      return out;
+    }
 
-  if (currently.length) {
-    md += `## 🌱 Currently\n`;
-    for (const c of currently) md += `- ${escMd(c)}\n`;
-    md += `\n`;
-  }
+    let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
-  if (socials.length) {
-    md += `## 💬 Find me\n`;
     md += `<p align="center">\n`;
-    for (const s of socials) {
-      if (/^(https?:)?\/\//.test(s.label || '')) {
-        md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
-      } else {
+    md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
+    md += `</p>\n\n`;
+
+    md += `# ${escMd(displayName)}\n`;
+    md += `**${escMd(role)}**${suffix ? `  \n${suffix}` : ''}\n\n`;
+    if (bio) md += `${escMd(bio)}\n\n`;
+    if (tagline) md += `> ${escMd(tagline)}\n\n`;
+
+    md += `## 📊 Stats\n`;
+    md += `<picture>\n`;
+    md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
+    md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
+    md += `</picture>\n\n`;
+
+    // Tech Stack - detailed categories
+    if (techStack && Object.keys(techStack).length) {
+      md += `## 🛠️ Tech Stack\n\n`;
+      for (const [category, skills] of Object.entries(techStack)) {
+        if (!skills || !skills.length) continue;
+        if (category === 'Frameworks & Tools') {
+          md += `### ${escMd(category)}\n\n`;
+          md += renderTools(skills);
+        } else {
+          md += `### ${escMd(category)}\n\n`;
+          md += renderSkillBars(skills);
+        }
+        md += `\n`;
+      }
+    } else if (data.languages && data.languages.length) {
+      // fallback to simple badges
+      md += `## 🛠️ Stack\n`;
+      md += `<p align="center">\n`;
+      for (const l of data.languages.slice(0, 10)) {
+        const color = (l.color || '#555').replace('#', '');
+        md += `<img src="https://img.shields.io/badge/${encodeURIComponent(l.name)}-${color}?style=for-the-badge" alt="${escMdAttr(l.name)}" />`;
+      }
+      md += `\n</p>\n\n`;
+    }
+
+    if (projects && projects.length) {
+      md += `## 🚀 What I'm building\n`;
+      for (const p of projects) {
+        const desc = p.desc || '';
+        if (p.url) {
+          md += `- [**${escMd(p.name)}**](${escUrl(p.url)}) — ${escMd(desc)}\n`;
+        } else {
+          md += `- **${escMd(p.name)}** — ${escMd(desc)}\n`;
+        }
+      }
+      md += `\n`;
+    }
+
+    md += `## 📈 Activity\n`;
+    md += `<picture>\n`;
+    md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
+    md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
+    md += `</picture>\n\n`;
+
+    if (currently.length) {
+      md += `## 🌱 Currently\n`;
+      for (const c of currently) md += `- ${escMd(c)}\n`;
+      md += `\n`;
+    }
+
+    if (socials.length) {
+      md += `## 💬 Find me\n`;
+      md += `<p align="center">\n`;
+      for (const s of socials) {
+        if (/^(https?:)?\/\//.test(s.label || '')) {
+          md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
+        } else {
         const color = SOCIAL_COLORS[s.label.toLowerCase()] || accentHex;
         const url = escUrl(s.url);
         const logo = s.label.toLowerCase() === 'github' ? 'github' : '';
