@@ -29,6 +29,19 @@
         { "name": "Python", "level": 4 },
         { "name": "Rust", "level": 3 }
       ],
+      "Hardware": [
+        { "name": "PC Hardware", "level": 4 },
+        { "name": "Troubleshooting", "level": 4 },
+        { "name": "ESP32", "level": 4 },
+        { "name": "Raspberry Pi", "level": 4 }
+      ],
+      "Security": [
+        { "name": "Networking", "level": 4 },
+        { "name": "OSINT", "level": 3 },
+        { "name": "Reverse Engineering", "level": 3 },
+        { "name": "Wireshark", "level": 4 },
+        { "name": "Nmap", "level": 4 }
+      ],
       "Web & Backend": [
         { "name": "Web Development", "level": 4 },
         { "name": "REST APIs", "level": 4 },
@@ -44,20 +57,11 @@
         { "name": "Automation", "level": 4 },
         { "name": "AI APIs", "level": 4 }
       ],
-      "Networking & Security": [
-        { "name": "Networking", "level": 4 },
-        { "name": "OSINT", "level": 3 },
-        { "name": "Reverse Engineering", "level": 3 }
-      ],
       "Systems": [
         { "name": "Linux", "level": 5 },
         { "name": "Windows", "level": 4 },
         { "name": "CLI / Shell", "level": 4 },
         { "name": "System Administration", "level": 4 }
-      ],
-      "Hardware": [
-        { "name": "PC Hardware", "level": 4 },
-        { "name": "Troubleshooting", "level": 4 }
       ],
       "Frameworks & Tools": [
         { "name": "React", "type": "TypeScript / JavaScript" },
@@ -66,8 +70,6 @@
         { "name": "Git", "type": "Version Control" },
         { "name": "GitHub", "type": "Development / Collaboration" },
         { "name": "Docker", "type": "Containers" },
-        { "name": "Wireshark", "type": "Network Analysis" },
-        { "name": "Nmap", "type": "Network Analysis" },
         { "name": "Burp Suite", "type": "Web Security" },
         { "name": "VS Code", "type": "Development Environment" }
       ]

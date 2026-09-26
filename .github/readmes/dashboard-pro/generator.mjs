@@ -194,7 +194,7 @@ function readReadme(ctx, data, profile) {
     return String(s == null ? '' : s).replace(/"/g, '%22');
   }
 
-  function renderSkillBars(skills, label) {
+  function renderSkillTable(skills, label) {
     const maxBar = 12;
     let out = `### ${escMd(label)}\n\n`;
     out += '```text\n';
@@ -209,21 +209,52 @@ function readReadme(ctx, data, profile) {
     return out;
   }
 
-  function renderTools(tools, label) {
-    let out = `### ${escMd(label)}\n\n`;
-    for (const t of tools) {
-      out += `- **${escMd(t.name)}** — ${escMd(t.type)}\n`;
+  function renderSkillsTable(techStack) {
+    // Pick top 3 categories like Nexus
+    const categories = Object.entries(techStack).slice(0, 3);
+    if (categories.length === 0) return '';
+
+    let md = `## \`> skills --list\`\n\n`;
+    
+    // Create a markdown table with 3 columns
+    md += '| | | |\n';
+    md += '|---|---|---|\n';
+    
+    // Get max length of skills in each category
+    const colData = categories.map(([cat, skills]) => ({
+      label: cat,
+      skills: skills.slice(0, 6) // limit skills per category
+    }));
+    
+    const maxRows = Math.max(...colData.map(c => c.skills.length));
+    
+    for (let row = 0; row < maxRows; row++) {
+      let line = '|';
+      for (let col = 0; col < 3; col++) {
+        if (col < colData.length && row < colData[col].skills.length) {
+          const s = colData[col].skills[row];
+          const filled = Math.max(1, Math.round((s.level / 5) * 12));
+          const empty = 12 - filled;
+          const bar = '█'.repeat(filled) + '░'.repeat(empty);
+          const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
+          line += ` ${escMd(s.name).padEnd(16)} ${bar} ${stars} |`;
+        } else {
+          line += `  |`;
+        }
+      }
+      md += line + '\n';
     }
-    return out + '\n';
+    md += '\n';
+    return md;
   }
 
-  // ASCII banner
-  const asciiBanner = `██████╗  █████╗ ███╗   ██╗████████╗██╗  ██╗
-██╔══██╗██╔══██╗████╗  ██║╚══██╔══╝╚██╗██╔╝
-██████╔╝███████║██╔██╗ ██║   ██║    ╚███╔╝ 
-██╔═══╝ ██╔══██║██║╚██╗██║   ██║    ██╔██╗ 
-██║     ██║  ██║██║ ╚████║   ██║   ██╔╝ ██╗
-╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝`;
+  // ASCII banner — "zpt0" in block font
+  const asciiBanner = `███████╗██████╗  █████╗ ██████╗ 
+██╔════╝██╔══██╗██╔══██╗██╔══██╗
+███████╗██████╔╝███████║██████╔╝
+╚════██║██╔═══╝ ██╔══██║██╔═══╝ 
+███████║██║     ██║  ██║██║     
+╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     `;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
@@ -264,17 +295,9 @@ function readReadme(ctx, data, profile) {
     md += '```\n\n';
   }
 
-  // Tech Stack - detailed categories
+  // Tech Stack - 3-column table like Nexus
   if (techStack && Object.keys(techStack).length) {
-    md += `## \`> skills --list\`\n\n`;
-    for (const [category, skills] of Object.entries(techStack)) {
-      if (!skills || !skills.length) continue;
-      if (category === 'Frameworks & Tools') {
-        md += renderTools(skills, category);
-      } else {
-        md += renderSkillBars(skills, category);
-      }
-    }
+    md += renderSkillsTable(techStack);
   }
 
   // Projects section (ls style)
