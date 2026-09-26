@@ -3,7 +3,7 @@ on:
   push:
     branches: ['*']
   schedule:
-    - cron: '*/5 * * * *'
+     - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.METRICTOKEN }}
           GITHUB_USER: zpt0
-        run: node .github/core/loader.js
+        run: node .github/core/loader.mjs
 
       - name: Commit and push
         run: |

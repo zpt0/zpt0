@@ -2,8 +2,8 @@
 // Plugin loader — reads config.json, validates the active plugin, runs it.
 // This is the ONLY entry point the workflow calls.
 
-import { loadConfig, buildContext } from './context.js';
-import { validate } from './schema.js';
+import { loadConfig, buildContext } from './context.mjs';
+import { validate } from './schema.mjs';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
