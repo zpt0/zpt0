@@ -214,9 +214,9 @@ function readReadme(ctx, data, profile) {
     }
     out += '```\n\n';
     return out;
-  }
+}
 
-function renderToolsLine(tools, label) {
+  function renderToolsLine(tools, label) {
     if (!tools || !tools.length) return '';
     let out = `**${escMd(label)}:** `;
     out += tools.map(t => `\`${escMd(t.name)}\``).join(' ');
@@ -281,9 +281,9 @@ function renderToolsLine(tools, label) {
   md += `</p>\n\n`;
 
   // Colored SVG banner (centered)
-  md += `<p align="center">\n`;
+  md += `<div align="center">\n`;
   md += `  <img src="${bannerUrl}" alt="zpt0" width="600" />\n`;
-  md += `</p>\n\n`;
+  md += `</div>\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
@@ -321,15 +321,23 @@ function renderToolsLine(tools, label) {
     if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
   }
 
-  // Projects section (ls style)
-  if (projects && projects.length) {
+  // Projects section (ls style) - show top repos by stars
+  const topRepos = (data.repos || [])
+    .filter(r => !r.fork)
+    .sort((a, b) => (b.stargazers || 0) - (a.stargazers || 0))
+    .slice(0, 5);
+
+  if (topRepos.length) {
     md += `## \`> ls ./projects\`\n\n`;
     md += '```text\n';
-    for (const p of projects) {
-      const name = escMd(p.name);
-      const desc = escMd(p.desc || '');
+    for (const r of topRepos) {
+      const name = escMd(r.name);
+      const desc = escMd(r.description || 'No description');
+      const stars = fmt(r.stargazers || 0);
+      const forks = fmt(r.forks || 0);
+      const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
       const bar = '█'.repeat(16);
-      md += `drwx------ ${name.padEnd(24)} ${bar}  <-- ${desc}\n`;
+      md += `drwx------ ${name.padEnd(24)} ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
     md += '```\n\n';
   }
