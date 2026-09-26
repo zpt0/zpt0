@@ -70,13 +70,13 @@
 
   <g class="matrix-text code-stream">
     <text x="70" y="80">01000010 01001001 01010100</text>
-    <text x="70" y="110">root@2pto:~# init_system</text>
+    <text x="70" y="110">root@zpt0:~# init_system</text>
     <text x="70" y="140">0x7F 0x3A 0xC4 0x12 0x89</text>
     <text x="70" y="170">CONNECT [OK] 127.0.0.1</text>
   </g>
 
   <g class="matrix-text code-stream-2">
-    <text x="610" y="80">SYSTEM_READY // 2PTO</text>
+    <text x="610" y="80">SYSTEM_READY // ZPT0</text>
     <text x="610" y="110">01010011 01000101 01000011</text>
     <text x="610" y="140">SHA-256: e3b0c44298fc1c14</text>
     <text x="610" y="170">PORT 8080: LISTENING</text>
@@ -84,7 +84,7 @@
 
   <circle cx="430" cy="130" r="120" fill="#00d2ff" opacity="0.06" filter="url(#subtleGlow)"/>
 
-  <text x="439" y="140" text-anchor="middle" class="main-title" filter="url(#subtleGlow)">2PTO</text>
+  <text x="439" y="140" text-anchor="middle" class="main-title" filter="url(#subtleGlow)">ZPT0</text>
 
   <g transform="translate(425, 175)">
     <text x="0" y="0" text-anchor="middle" class="sub-title">> DEVELOPER / SECURITY_</text>
