@@ -194,9 +194,9 @@ function readReadme(ctx, data, profile) {
     return String(s == null ? '' : s).replace(/"/g, '%22');
   }
 
-  function renderSkillTable(skills, label) {
+  function renderSkillCategory(emoji, label, skills) {
     const maxBar = 12;
-    let out = `### ${escMd(label)}\n\n`;
+    let out = `### ${emoji} ${escMd(label)}\n\n`;
     out += '```text\n';
     for (const s of skills) {
       const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
@@ -209,43 +209,11 @@ function readReadme(ctx, data, profile) {
     return out;
   }
 
-  function renderSkillsTable(techStack) {
-    // Pick top 3 categories like Nexus
-    const categories = Object.entries(techStack).slice(0, 3);
-    if (categories.length === 0) return '';
-
-    let md = `## \`> skills --list\`\n\n`;
-    
-    // Create a markdown table with 3 columns
-    md += '| | | |\n';
-    md += '|---|---|---|\n';
-    
-    // Get max length of skills in each category
-    const colData = categories.map(([cat, skills]) => ({
-      label: cat,
-      skills: skills.slice(0, 6) // limit skills per category
-    }));
-    
-    const maxRows = Math.max(...colData.map(c => c.skills.length));
-    
-    for (let row = 0; row < maxRows; row++) {
-      let line = '|';
-      for (let col = 0; col < 3; col++) {
-        if (col < colData.length && row < colData[col].skills.length) {
-          const s = colData[col].skills[row];
-          const filled = Math.max(1, Math.round((s.level / 5) * 12));
-          const empty = 12 - filled;
-          const bar = '█'.repeat(filled) + '░'.repeat(empty);
-          const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
-          line += ` ${escMd(s.name).padEnd(16)} ${bar} ${stars} |`;
-        } else {
-          line += `  |`;
-        }
-      }
-      md += line + '\n';
-    }
-    md += '\n';
-    return md;
+  function renderToolsLine(tools, label) {
+    if (!tools || !tools.length) return '';
+    let out = `**${escMd(label)}:** `;
+    out += tools.map(t => `\`${escMd(t.name)}\``).join(' ');
+    return out + '\n\n';
   }
 
   // ASCII banner — "zpt0" in block font
@@ -295,9 +263,13 @@ function readReadme(ctx, data, profile) {
     md += '```\n\n';
   }
 
-  // Tech Stack - 3-column table like Nexus
+  // Tech Stack - separate categories like Nexus
   if (techStack && Object.keys(techStack).length) {
-    md += renderSkillsTable(techStack);
+    md += `## \`> skills --list\`\n\n`;
+    if (techStack.Languages) md += renderSkillCategory('💻', 'Languages', techStack.Languages);
+    if (techStack.Hardware) md += renderSkillCategory('🔩', 'Hardware', techStack.Hardware);
+    if (techStack.Security) md += renderSkillCategory('🛡️', 'Security', techStack.Security);
+    if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
   }
 
   // Projects section (ls style)
@@ -311,7 +283,6 @@ function readReadme(ctx, data, profile) {
       md += `drwx------ ${name.padEnd(24)} ${bar}  <-- ${desc}\n`;
     }
     md += '```\n\n';
-    md += `> 👾 **Stealth mode activated.** New projects are in the works. Details classified until release. Watch the repos.\n\n`;
   }
 
   // Activity widget
