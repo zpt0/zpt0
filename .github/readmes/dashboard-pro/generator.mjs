@@ -373,14 +373,12 @@ function readReadme(ctx, data, profile) {
     md += `\n</p>\n\n`;
   }
 
-  // Footer quote
-  md += `\`\`\`\n`;
-  md += `╔═══════════════════════════════════════════════════════════╗\n`;
-  md += `║  "Stay curious. Stay creative.                             ║\n`;
-  md += `║   Always push the boundaries of what's possible."          ║\n`;
-  md += `║                                              — ${escMd(displayName)}  ║\n`;
-  md += `╚═══════════════════════════════════════════════════════════╝\n`;
-  md += `\`\`\`\n\n`;
+  // Footer quote (centered image)
+  md += `<p align="center">\n`;
+  md += `  <a href="https://github.com/piyushsuthar/github-readme-quotes">\n`;
+  md += `    <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark" alt="Readme Quotes" />\n`;
+  md += `  </a>\n`;
+  md += `</p>\n\n`;
 
   md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
 
