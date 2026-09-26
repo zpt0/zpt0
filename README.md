@@ -1,4 +1,4 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:21:42.287Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:51:13.316Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
@@ -22,7 +22,7 @@
 ```python
 class zpt0:
     role        = "Fullstack Developer"
-    focus       = ["Fullstack Dev","Discord Bots","Automation","Security Research","Reverse Engineering","OSINT"]
+    focus       = ["Discord Bots","Automation","Security Research","Reverse Engineering","OSINT"]
     languages   = ["TypeScript","JavaScript","Python","Rust","HTML/CSS"]
     hardware    = ["Custom PCBs","ESP32","Raspberry Pi"]
     security    = ["Network Analysis","OSINT","Reverse Engineering","Wi-Fi Pentesting"]
@@ -37,15 +37,15 @@ class zpt0:
 | 💻 Languages | 🔩 Hardware | 🛡️ Security |
 | --- | --- | --- |
 | TypeScript | PC Hardware | Networking |
-| ████████████  ★★★★★ | ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ |
+| ████████████ | ██████████░░ | ██████████░░ |
 | JavaScript | Troubleshooting | OSINT |
-| ████████████  ★★★★★ | ██████████░░  ★★★★☆ | ███████░░░░░  ★★★☆☆ |
+| ████████████ | ██████████░░ | ███████░░░░░ |
 | Python | ESP32 | Reverse Engineering |
-| ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ | ███████░░░░░  ★★★☆☆ |
+| ██████████░░ | ██████████░░ | ███████░░░░░ |
 | Rust | Raspberry Pi | Wireshark |
-| ███████░░░░░  ★★★☆☆ | ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ |
+| ███████░░░░░ | ██████████░░ | ██████████░░ |
 |  |  | Nmap |
-|  |  | ██████████░░  ★★★★☆ |
+|  |  | ██████████░░ |
 
 </p>
 
@@ -53,11 +53,9 @@ class zpt0:
 
 ## `> ls ./projects`
 
-```text
 drwx------ [DC-Lyra](https://github.com/zpt0/DC-Lyra)  <-- A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management  (★ 42  ⑂ 8  {TypeScript})
 drwx------ [devinspire](https://github.com/zpt0/devinspire)  <-- Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.  (★ 28  ⑂ 5  {JavaScript})
 drwx------ [nightcord](https://github.com/zpt0/nightcord)  <-- Everything Discord doesn't build, we create. Custom Discord tools and utilities for server management.  (★ 15  ⑂ 3  {TypeScript})
-```
 
 ## `> cat ./dev_log.txt`
 
