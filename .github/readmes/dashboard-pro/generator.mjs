@@ -216,12 +216,12 @@ function readReadme(ctx, data, profile) {
     return out + '\n\n';
   }
 
-  // ASCII banner — "zpt0" in custom style
-  const asciiBanner = `@@@@@@@  @@@@@@@   @@@@@@  @@@  @@@
-     @@!  @@!  @@!  @@!  @@!  @@!  @@!
-   @!!   @!@  @!@  @!@  @!@  @!@
- !!:      !:  !!:  !!:  !!:  !:  !!:
- :.::.:  :   :  :  :   :  :  :  : :`;
+  const asciiBanner = `<pre style="font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.17;white-space:pre;background-color:#000;color:#fff;padding:8px;margin:0;"><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">──────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span>
+<span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">──────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span>
+<span style="color:#FFFFFF">  </span><span style="color:#0000AA">┌─</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">   </span><span style="color:#0000AA">┌─────</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#0000AA">   ┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA">    </span><span style="color:#0000AA">┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#5555FF">┌</span><span style="color:#FFFFFF">┐</span><span style="color:#0000AA">┌</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span>
+<span style="color:#0000AA">┌─┘</span><span style="color:#5555FF">┌</span><span style="color:#0000AA">─</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA">   </span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">┌────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#0000AA">   │</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span><span style="color:#AAAAAA">    </span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">┘</span><span style="color:#0000AA">│</span><span style="color:#FFFFFF"> </span><span style="color:#5555FF">│</span>
+<span style="color:#5555FF">│</span><span style="color:#0000AA">  </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─</span><span style="color:#5555FF">─</span><span style="color:#FFFFFF">┐</span><span style="color:#AAAAAA"> </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">│</span><span style="color:#AAAAAA">      </span><span style="color:#0000AA">   </span><span style="color:#5555FF">│</span><span style="color:#0000AA"> │</span><span style="color:#AAAAAA">    </span><span style="color:#5555FF">│</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">└──┘</span><span style="color:#FFFFFF"> </span><span style="color:#0000AA">│</span>
+<span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────</span><span style="color:#5555FF">┘</span><span style="color:#AAAAAA"> </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">┘</span><span style="color:#AAAAAA">      </span><span style="color:#0000AA">   </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">┘</span><span style="color:#AAAAAA">    </span><span style="color:#FFFFFF">└</span><span style="color:#5555FF">─</span><span style="color:#0000AA">─────┘</span></pre>`;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
@@ -230,7 +230,7 @@ function readReadme(ctx, data, profile) {
   md += `</p>\n\n`;
 
   // ASCII banner
-  md += `\`\`\`\n${asciiBanner}\n\`\`\`\n\n`;
+  md += `${asciiBanner}\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
