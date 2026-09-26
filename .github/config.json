@@ -77,7 +77,7 @@
     "whoami": {
       "name": "zpt0",
       "role": "Fullstack Developer",
-      "focus": ["Fullstack Dev", "Discord Bots", "Automation", "Security Research", "Reverse Engineering", "OSINT"],
+      "focus": ["Discord Bots", "Automation", "Security Research", "Reverse Engineering", "OSINT"],
       "languages": ["TypeScript", "JavaScript", "Python", "Rust", "HTML/CSS"],
       "hardware": ["Custom PCBs", "ESP32", "Raspberry Pi"],
       "security": ["Network Analysis", "OSINT", "Reverse Engineering", "Wi-Fi Pentesting"],
