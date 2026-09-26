@@ -96,6 +96,12 @@ export function mockData() {
     }
     weeks.push({ contributionDays: days });
   }
+  const mockRepos = [
+    { name: 'DC-Lyra', description: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management', stargazers: 42, forks: 8, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false },
+    { name: 'devinspire', description: 'Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.', stargazers: 28, forks: 5, primaryLanguage: { name: 'JavaScript', color: '#f1e05a' }, fork: false },
+    { name: 'nightcord', description: 'Everything Discord doesn\'t build, we create. Custom Discord tools and utilities for server management.', stargazers: 15, forks: 3, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false },
+    { name: 'zpt0', description: 'My GitHub profile', stargazers: 12, forks: 2, primaryLanguage: { name: 'HTML', color: '#e34c26' }, fork: false },
+  ];
   return {
     stats: { totalStars: 12, totalForks: 5, totalRepos: 24, totalCommits: 847 },
     languages: [
@@ -107,11 +113,8 @@ export function mockData() {
       { name: 'CSS', color: '#663399', size: 5000, repos: 3, percentage: 5 },
       { name: 'Svelte', color: '#ff3e00', size: 5000, repos: 1, percentage: 5 },
     ],
-    topProjects: [
-      { name: 'DC-Lyra', desc: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
-      { name: 'devinspire', desc: 'Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.', stars: 0, forks: 0, lang: 'JavaScript', langColor: '#f1e05a' },
-      { name: 'nightcord', desc: 'Everything Discord doesn\'t build, we create. Custom Discord tools and utilities for server management.', stars: 0, forks: 0, lang: 'TypeScript', langColor: '#3178c6' },
-    ],
+    topProjects: mockRepos.slice(0, 3),
+    repos: mockRepos,
     calendar: { totalContributions: 847, weeks },
   };
 }
@@ -158,6 +161,14 @@ export function processData(user) {
     stats: { totalStars, totalForks, totalRepos, totalCommits },
     languages,
     topProjects,
+    repos: repos.map(r => ({
+      name: r.name,
+      description: r.description,
+      stargazers: r.stargazerCount,
+      forks: r.forkCount,
+      primaryLanguage: r.primaryLanguage,
+      fork: r.isFork,
+    })),
     calendar: user.contributionsCollection.contributionCalendar,
   };
 }
