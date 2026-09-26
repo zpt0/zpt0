@@ -3,15 +3,15 @@
 // Plugin entry: exports async generate(ctx). Reuses core/api.mjs for data.
 
 import { QUERY as API_QUERY, gql, fetchAllTimeCommits, processData, mockData } from '../../core/api.mjs';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const BANNER_SVG = readFileSync(join(__dirname, 'assets/banner.svg'), 'utf8');
 
-const PROFILE_QUERY = API_QUERY.replace(
+const PROFILE_QUERY = API_QUERY.replaceAll(
   '    name\n    createdAt',
   '    name\n    bio\n    location\n    websiteUrl\n    url\n    followers { totalCount }\n    createdAt'
 );
@@ -57,7 +57,7 @@ function fmt(n) {
 }
 
 function escSvg(s) {
-  return String(s == null ? '' : s).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+  return String(s == null ? '' : s).replaceAll('&', '&').replaceAll('<', '<').replaceAll('>', '>');
 }
 
 function escUrl(s) {
@@ -125,15 +125,15 @@ function activityCalendar(data, theme) {
   const gap = 3;
   const rows = 7;
   const step = cell + gap;
-  const weeks = (data.calendar.weeks || []).slice(-53);
+  const weeks = (data.calendar?.weeks || []).slice(-53);
   const cols = weeks.length;
 
   let cells = '';
   for (let w = 0; w < cols; w++) {
-    const days = (weeks[w] && weeks[w].contributionDays) || [];
+    const days = weeks[w]?.contributionDays || [];
     for (let d = 0; d < rows; d++) {
       const day = days[d];
-      const count = day ? day.contributionCount : 0;
+      const count = day?.contributionCount ?? 0;
       const level = count === 0 ? 0 : count <= 2 ? 1 : count <= 5 ? 2 : count <= 9 ? 3 : 4;
       const fill = level === 0 ? t.track : t.ramp[level - 1];
       const cx = gridX + w * step;
@@ -142,7 +142,7 @@ function activityCalendar(data, theme) {
     }
   }
 
-  const total = data.calendar.totalContributions || 0;
+  const total = data.calendar?.totalContributions ?? 0;
   const legend = [
     ['Less', t.track],
     [null, t.ramp[0]],
@@ -171,6 +171,60 @@ function activityCalendar(data, theme) {
   return svg;
 }
 
+function escMd(s) {
+  return String(s == null ? '' : s).replaceAll('|', '\\|');
+}
+
+function escMdAttr(s) {
+  return String(s == null ? '' : s).replaceAll('"', '%22');
+}
+
+function renderToolsLine(tools, label) {
+  if (!tools?.length) return '';
+  let out = `**${escMd(label)}:** `;
+  out += tools.map(t => `\`${escMd(t.name)}\``).join(' ');
+  return out + '\n\n';
+}
+
+function renderSkillsTable(techStack) {
+  const categories = [
+    { key: 'Languages', emoji: '💻', skills: techStack.Languages || [] },
+    { key: 'Hardware', emoji: '🔩', skills: techStack.Hardware || [] },
+    { key: 'Security', emoji: '🛡️', skills: techStack.Security || [] },
+  ].filter(c => c.skills.length > 0);
+
+  if (categories.length === 0) return '';
+
+  const maxBar = 12;
+  const maxRows = Math.max(...categories.map(c => c.skills.length));
+
+  let md = `## \`> skills --list\`\n\n`;
+  md += `<p align="center">\n\n`;
+
+  md += '| ' + categories.map(c => `${c.emoji} ${c.key}`).join(' | ') + ' |\n';
+  md += '| ' + categories.map(() => '---').join(' | ') + ' |\n';
+
+  for (let row = 0; row < maxRows; row++) {
+    const nameCells = categories.map(c => (row < c.skills.length ? escMd(c.skills[row].name) : ''));
+    md += '| ' + nameCells.join(' | ') + ' |\n';
+
+    const barCells = categories.map(c => {
+      if (row < c.skills.length) {
+        const s = c.skills[row];
+        const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
+        const empty = maxBar - filled;
+        const bar = '█'.repeat(filled) + '░'.repeat(empty);
+        return `${bar}`;
+      }
+      return '';
+    });
+    md += '| ' + barCells.join(' | ') + ' |\n';
+  }
+
+  md += '\n</p>\n\n';
+  return md;
+}
+
 // ----- Markdown -----
 
 function readReadme(ctx, data, profile) {
@@ -184,91 +238,10 @@ function readReadme(ctx, data, profile) {
   const tagline = profile.tagline || '';
   const location = profile.location || '';
   const website = profile.website || '';
-  const bio = profile.bio || '';
   const currently = profile.currently || [];
   const socials = profile.socials || [];
-  const projects = profile.focusProjects || data.topProjects || [];
   const techStack = profile.techStack || {};
   const whoami = profile.whoami || {};
-
-  const suffix = [location ? `📍 ${location}` : '', website ? `🔗 ${website}` : '']
-    .filter(Boolean).join(' · ');
-
-  function escMd(s) {
-    return String(s == null ? '' : s).replace(/\|/g, '\\|');
-  }
-  function escMdAttr(s) {
-    return String(s == null ? '' : s).replace(/"/g, '%22');
-  }
-
-  function renderSkillCategory(emoji, label, skills) {
-    const maxBar = 12;
-    let out = `### ${emoji} ${escMd(label)}\n\n`;
-    out += '```text\n';
-    for (const s of skills) {
-      const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
-      const empty = maxBar - filled;
-      const bar = '█'.repeat(filled) + '░'.repeat(empty);
-      const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
-      out += `${escMd(s.name).padEnd(18)} ${bar}  ${stars}\n`;
-    }
-    out += '```\n\n';
-    return out;
-}
-
-  function renderToolsLine(tools, label) {
-    if (!tools || !tools.length) return '';
-    let out = `**${escMd(label)}:** `;
-    out += tools.map(t => `\`${escMd(t.name)}\``).join(' ');
-    return out + '\n\n';
-  }
-
-  function renderSkillsTable(techStack) {
-    const categories = [
-      { key: 'Languages', emoji: '💻', skills: techStack.Languages || [] },
-      { key: 'Hardware', emoji: '🔩', skills: techStack.Hardware || [] },
-      { key: 'Security', emoji: '🛡️', skills: techStack.Security || [] },
-    ].filter(c => c.skills.length > 0);
-
-    if (categories.length === 0) return '';
-
-    const maxBar = 12;
-    const maxRows = Math.max(...categories.map(c => c.skills.length));
-
-    let md = `## \`> skills --list\`\n\n`;
-    md += `<p align="center">\n\n`;
-
-    // Table header
-    md += '| ' + categories.map(c => `${c.emoji} ${c.key}`).join(' | ') + ' |\n';
-    md += '| ' + categories.map(() => '---').join(' | ') + ' |\n';
-
-    for (let row = 0; row < maxRows; row++) {
-      // Row 1: Skill names
-      const nameCells = categories.map(c => {
-        if (row < c.skills.length) {
-          return escMd(c.skills[row].name);
-        }
-        return '';
-      });
-      md += '| ' + nameCells.join(' | ') + ' |\n';
-
-      // Row 2: Bar only (no stars)
-      const barCells = categories.map(c => {
-        if (row < c.skills.length) {
-          const s = c.skills[row];
-          const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
-          const empty = maxBar - filled;
-          const bar = '█'.repeat(filled) + '░'.repeat(empty);
-          return `${bar}`;
-        }
-        return '';
-      });
-      md += '| ' + barCells.join(' | ') + ' |\n';
-    }
-
-    md += '\n</p>\n\n';
-    return md;
-  }
 
   // SVG banner (colored, works on GitHub)
   const bannerUrl = `${base}/banner.svg`;
@@ -305,10 +278,10 @@ function readReadme(ctx, data, profile) {
     md += '```python\n';
     md += `class ${escMd(whoami.name || displayName)}:\n`;
     if (whoami.role) md += `    role        = "${escMd(whoami.role)}"\n`;
-    if (whoami.focus && whoami.focus.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
-    if (whoami.languages && whoami.languages.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
-    if (whoami.hardware && whoami.hardware.length) md += `    hardware    = ${JSON.stringify(whoami.hardware)}\n`;
-    if (whoami.security && whoami.security.length) md += `    security    = ${JSON.stringify(whoami.security)}\n`;
+    if (whoami.focus?.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
+    if (whoami.languages?.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
+    if (whoami.hardware?.length) md += `    hardware    = ${JSON.stringify(whoami.hardware)}\n`;
+    if (whoami.security?.length) md += `    security    = ${JSON.stringify(whoami.security)}\n`;
     if (whoami.status) md += `    status      = "${escMd(whoami.status)}"\n`;
     if (whoami.philosophy) md += `    philosophy  = "${escMd(whoami.philosophy)}"\n`;
     md += '```\n\n';
@@ -336,7 +309,7 @@ function readReadme(ctx, data, profile) {
       const url = r.url || `https://github.com/${user}/${r.name}`;
       const stars = fmt(r.stargazers || 0);
       const forks = fmt(r.forks || 0);
-      const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
+      const lang = r.primaryLanguage?.name || '—';
       md += `| [${name}](${url}) | (★ ${stars}  ⑂ ${forks}  {${lang}}) |\n`;
     }
     md += '\n';
@@ -392,7 +365,7 @@ function readReadme(ctx, data, profile) {
 export async function generate(ctx) {
   const username = ctx.user;
   const token = ctx.token;
-  const profile = Object.assign({}, ctx.config.profile || {});
+  const profile = { ...(ctx.config.profile || {}) };
   let data;
 
   if (token) {
@@ -404,10 +377,10 @@ export async function generate(ctx) {
       const allTimeCommits = await fetchAllTimeCommits(username, token, u.createdAt);
       console.log(`  All-time commits: ${allTimeCommits}`);
       u._allTimeCommits = allTimeCommits;
-      profile._followers = u.followers ? u.followers.totalCount : null;
+      profile._followers = u.followers?.totalCount ?? null;
       data = processData(u);
-    } catch (e) {
-      if (e.message.includes('403') || e.message.includes('401') || e.message.includes('Could not resolve to a User')) {
+    } catch (error) {
+      if (error.message.includes('403') || error.message.includes('401') || error.message.includes('Could not resolve to a User')) {
         console.log('  Extended query failed, falling back to basic repo data...');
         try {
           const user = await gql(token, API_QUERY, { login: username });
@@ -417,12 +390,12 @@ export async function generate(ctx) {
           console.log(`  All-time commits: ${allTimeCommits}`);
           u._allTimeCommits = allTimeCommits;
           data = processData(u);
-        } catch (e2) {
-          console.error(`Error: ${e2.message}`);
+        } catch (error_) {
+          console.error(`Error: ${error_.message}`);
           data = mockData();
         }
       } else {
-        console.error(`Error: ${e.message}`);
+        console.error(`Error: ${error.message}`);
         data = mockData();
       }
     }
