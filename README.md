@@ -1,12 +1,10 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:02:26.871Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:21:42.287Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
 </p>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="600" />
-</p>
+<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="600" />
 
 # zpt0 • Fullstack Developer
 🔗 https://github.com/zpt0
@@ -56,9 +54,9 @@ class zpt0:
 ## `> ls ./projects`
 
 ```text
-drwx------ DC-Lyra                  ████████████████  <-- A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management
-drwx------ devinspire               ████████████████  <-- Spice up your GitHub README with random dev quotes. Custom styles, dynamic content.
-drwx------ nightcord                ████████████████  <-- Custom Discord tools and utilities for server management
+drwx------ [DC-Lyra](https://github.com/zpt0/DC-Lyra)  <-- A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management  (★ 42  ⑂ 8  {TypeScript})
+drwx------ [devinspire](https://github.com/zpt0/devinspire)  <-- Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.  (★ 28  ⑂ 5  {JavaScript})
+drwx------ [nightcord](https://github.com/zpt0/nightcord)  <-- Everything Discord doesn't build, we create. Custom Discord tools and utilities for server management.  (★ 15  ⑂ 3  {TypeScript})
 ```
 
 ## `> cat ./dev_log.txt`
