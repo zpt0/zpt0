@@ -336,8 +336,7 @@ function readReadme(ctx, data, profile) {
       const stars = fmt(r.stargazers || 0);
       const forks = fmt(r.forks || 0);
       const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
-      const bar = '█'.repeat(16);
-      md += `drwx------ [${name}](${url}) ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
+      md += `drwx------ [${name}](${url})  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
     md += '```\n\n';
   }
