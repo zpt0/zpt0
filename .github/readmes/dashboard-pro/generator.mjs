@@ -216,13 +216,12 @@ function readReadme(ctx, data, profile) {
     return out + '\n\n';
   }
 
-  // ASCII banner — "zpt0" in block font
-  const asciiBanner = `███████╗██████╗  █████╗ ██████╗ 
-██╔════╝██╔══██╗██╔══██╗██╔══██╗
-███████╗██████╔╝███████║██████╔╝
-╚════██║██╔═══╝ ██╔══██║██╔═══╝ 
-███████║██║     ██║  ██║██║     
-╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     `;
+  // ASCII banner — "zpt0" in custom style
+  const asciiBanner = `@@@@@@@  @@@@@@@   @@@@@@  @@@  @@@
+     @@!  @@!  @@!  @@!  @@!  @@!  @@!
+   @!!   @!@  @!@  @!@  @!@  @!@
+ !!:      !:  !!:  !!:  !!:  !:  !!:
+ :.::.:  :   :  :  :   :  :  :  : :`;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
