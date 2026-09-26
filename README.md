@@ -1,10 +1,12 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:51:13.316Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T17:46:37.950Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
 </p>
 
-<img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="600" />
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="100%" />
+</p>
 
 # zpt0 • Fullstack Developer
 🔗 https://github.com/zpt0
@@ -53,9 +55,12 @@ class zpt0:
 
 ## `> ls ./projects`
 
-drwx------ [DC-Lyra](https://github.com/zpt0/DC-Lyra)  <-- A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management  (★ 42  ⑂ 8  {TypeScript})
-drwx------ [devinspire](https://github.com/zpt0/devinspire)  <-- Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.  (★ 28  ⑂ 5  {JavaScript})
-drwx------ [nightcord](https://github.com/zpt0/nightcord)  <-- Everything Discord doesn't build, we create. Custom Discord tools and utilities for server management.  (★ 15  ⑂ 3  {TypeScript})
+| Repo | Stats |
+|------|-------|
+| [Clonecord](https://github.com/zpt0/Clonecord) | (★ 3  ⑂ 2  {TypeScript}) |
+| [DC-Lyra](https://github.com/zpt0/DC-Lyra) | (★ 2  ⑂ 2  {TypeScript}) |
+| [Questcord](https://github.com/zpt0/Questcord) | (★ 1  ⑂ 0  {TypeScript}) |
+| [Git2Page](https://github.com/zpt0/Git2Page) | (★ 1  ⑂ 0  {TypeScript}) |
 
 ## `> cat ./dev_log.txt`
 
@@ -79,13 +84,11 @@ drwx------ [nightcord](https://github.com/zpt0/nightcord)  <-- Everything Discor
 <a href="https://github.com/zpt0"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&color=181717&logo=github" alt="GitHub" /></a>
 </p>
 
-```
-╔═══════════════════════════════════════════════════════════╗
-║  "Stay curious. Stay creative.                             ║
-║   Always push the boundaries of what's possible."          ║
-║                                              — zpt0  ║
-╚═══════════════════════════════════════════════════════════╝
-```
+<p align="center">
+  <a href="https://github.com/piyushsuthar/github-readme-quotes">
+    <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark" alt="Readme Quotes" />
+  </a>
+</p>
 
 <hr/>
 <p align="center"><sub>zpt0 · Fullstack Developer · <a href="https://github.com/zpt0">github.com/zpt0</a></sub></p>
