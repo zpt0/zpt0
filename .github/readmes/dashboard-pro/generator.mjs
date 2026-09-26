@@ -3,13 +3,11 @@
 // Plugin entry: exports async generate(ctx). Reuses core/api.mjs for data.
 
 import { QUERY as API_QUERY, gql, fetchAllTimeCommits, processData, mockData } from '../../core/api.mjs';
-import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const BANNER_SVG = readFileSync(join(__dirname, 'assets/banner.svg'), 'utf8');
 
 const PROFILE_QUERY = API_QUERY.replace(
   '    name\n    createdAt',
@@ -270,8 +268,8 @@ function readReadme(ctx, data, profile) {
     return md;
   }
 
-  // SVG banner (colored, works on GitHub)
-  const bannerUrl = `${base}/banner.svg`;
+  // PNG banner (colored, works on GitHub)
+  const bannerUrl = `${base}/banner.png`;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
 
@@ -435,7 +433,6 @@ export async function generate(ctx) {
       { path: 'stats-dark.svg', content: statStrip(data, profile, 'dark') },
       { path: 'calendar.svg', content: activityCalendar(data, 'light') },
       { path: 'calendar-dark.svg', content: activityCalendar(data, 'dark') },
-      { path: 'banner.svg', content: BANNER_SVG },
     ],
     readme: readReadme(ctx, data, profile),
   };
