@@ -329,13 +329,11 @@ function readReadme(ctx, data, profile) {
     md += `## \`> ls ./projects\`\n\n`;
     md += '```text\n';
     for (const r of topRepos) {
-      const name = escMd(r.name);
       const url = r.url || `https://github.com/${user}/${r.name}`;
-      const desc = escMd(r.description || 'No description');
       const stars = fmt(r.stargazers || 0);
       const forks = fmt(r.forks || 0);
       const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
-      md += `drwx------ [${name}](${url})  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
+      md += `drwx------ ${url} | (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
     md += '```\n\n';
   }
