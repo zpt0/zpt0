@@ -280,10 +280,10 @@ function readReadme(ctx, data, profile) {
   md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
   md += `</p>\n\n`;
 
-  // Colored SVG banner (centered)
-  md += `<div align="center">\n`;
+  // Colored SVG banner (centered - GitHub compatible)
+  md += `<p align="center">\n`;
   md += `  <img src="${bannerUrl}" alt="zpt0" width="600" />\n`;
-  md += `</div>\n\n`;
+  md += `</p>\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
@@ -332,12 +332,13 @@ function readReadme(ctx, data, profile) {
     md += '```text\n';
     for (const r of topRepos) {
       const name = escMd(r.name);
+      const url = r.url || `https://github.com/${user}/${r.name}`;
       const desc = escMd(r.description || 'No description');
       const stars = fmt(r.stargazers || 0);
       const forks = fmt(r.forks || 0);
       const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
       const bar = '█'.repeat(16);
-      md += `drwx------ ${name.padEnd(24)} ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
+      md += `drwx------ [${name}](${url}) ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
     md += '```\n\n';
   }
