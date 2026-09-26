@@ -328,6 +328,7 @@ function readReadme(ctx, data, profile) {
 
   if (topRepos.length) {
     md += `## \`> ls ./projects\`\n\n`;
+    md += '```text\n';
     for (const r of topRepos) {
       const name = escMd(r.name);
       const url = r.url || `https://github.com/${user}/${r.name}`;
@@ -338,7 +339,7 @@ function readReadme(ctx, data, profile) {
       const bar = '█'.repeat(16);
       md += `drwx------ [${name}](${url}) ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
-    md += '\n';
+    md += '```\n\n';
   }
 
   // Activity widget (centered)
