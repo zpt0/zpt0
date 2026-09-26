@@ -284,10 +284,10 @@ function readReadme(ctx, data, profile) {
   md += `  <img src="${bannerUrl}" alt="zpt0" width="100%" />\n`;
   md += `</p>\n\n`;
 
-  // Header with role
-  md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
-  if (suffix) md += `${suffix}\n`;
-  md += `\n`;
+  // Subtitle under banner (centered, with link)
+  md += `<p align="center">\n`;
+  md += `  <a href="https://github.com/zpt0"><strong>${escMd(displayName)}</strong></a> • ${escMd(role)}\n`;
+  md += `</p>\n\n`;
 
   // Tagline
   if (tagline) md += `> ${escMd(tagline)}\n\n`;
