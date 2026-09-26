@@ -274,6 +274,7 @@ export async function generate(ctx) {
   if (token) {
     console.log(`Fetching data for @${username}...`);
     try {
+      // Try extended query first (needs PAT with read:user)
       const user = await gql(token, PROFILE_QUERY, { login: username });
       const u = user.user;
       console.log(`  Account created: ${u.createdAt}`);
@@ -283,8 +284,25 @@ export async function generate(ctx) {
       profile._followers = u.followers ? u.followers.totalCount : null;
       data = processData(u);
     } catch (e) {
-      console.error(`Error: ${e.message}`);
-      data = mockData();
+      // If extended query fails (e.g., no read:user scope), fall back to basic query
+      if (e.message.includes('403') || e.message.includes('401') || e.message.includes('Could not resolve to a User')) {
+        console.log('  Extended query failed, falling back to basic repo data...');
+        try {
+          const user = await gql(token, API_QUERY, { login: username });
+          const u = user.user;
+          console.log(`  Account created: ${u.createdAt}`);
+          const allTimeCommits = await fetchAllTimeCommits(username, token, u.createdAt);
+          console.log(`  All-time commits: ${allTimeCommits}`);
+          u._allTimeCommits = allTimeCommits;
+          data = processData(u);
+        } catch (e2) {
+          console.error(`Error: ${e2.message}`);
+          data = mockData();
+        }
+      } else {
+        console.error(`Error: ${e.message}`);
+        data = mockData();
+      }
     }
   } else {
     console.log('No GITHUB_TOKEN — using mock data for preview.');
