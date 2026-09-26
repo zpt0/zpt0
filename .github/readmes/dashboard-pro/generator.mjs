@@ -252,15 +252,14 @@ function readReadme(ctx, data, profile) {
       });
       md += '| ' + nameCells.join(' | ') + ' |\n';
 
-      // Row 2: Bar + stars
+      // Row 2: Bar only (no stars)
       const barCells = categories.map(c => {
         if (row < c.skills.length) {
           const s = c.skills[row];
           const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
           const empty = maxBar - filled;
           const bar = '█'.repeat(filled) + '░'.repeat(empty);
-          const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
-          return `${bar}  ${stars}`;
+          return `${bar}`;
         }
         return '';
       });
@@ -328,7 +327,6 @@ function readReadme(ctx, data, profile) {
 
   if (topRepos.length) {
     md += `## \`> ls ./projects\`\n\n`;
-    md += '```text\n';
     for (const r of topRepos) {
       const name = escMd(r.name);
       const url = r.url || `https://github.com/${user}/${r.name}`;
@@ -338,7 +336,7 @@ function readReadme(ctx, data, profile) {
       const lang = r.primaryLanguage ? r.primaryLanguage.name : '—';
       md += `drwx------ [${name}](${url})  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
-    md += '```\n\n';
+    md += '\n';
   }
 
   // Activity widget (centered)
