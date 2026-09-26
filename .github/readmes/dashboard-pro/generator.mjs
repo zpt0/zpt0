@@ -241,8 +241,6 @@ function buildHeader(ctx, profile) {
   const accentHex = (profile.accent || '#0e75b6').replace('#', '');
   const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
   const displayName = profile.displayName || user;
-  const role = profile.role || '';
-  const tagline = profile.tagline || '';
   const bannerUrl = `${base}/banner.svg`;
 
   let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
@@ -254,12 +252,6 @@ function buildHeader(ctx, profile) {
   md += `<p align="center">\n`;
   md += `  <img src="${bannerUrl}" alt="zpt0" width="100%" />\n`;
   md += `</p>\n\n`;
-
-  md += `<p align="center">\n`;
-  md += `  <a href="https://github.com/zpt0"><strong>${escMd(displayName)}</strong></a> • ${escMd(role)}\n`;
-  md += `</p>\n\n`;
-
-  if (tagline) md += `> ${escMd(tagline)}\n\n`;
 
   return { md, base };
 }
@@ -273,13 +265,13 @@ function buildStats(base) {
   return md;
 }
 
-function buildWhoami(profile, displayName) {
+function buildWhoami(profile) {
   const whoami = profile.whoami || {};
   if (!whoami || !Object.keys(whoami).length) return '';
 
   let md = `## \`> whoami\`\n\n`;
   md += '```python\n';
-  md += `class ${escMd(whoami.name || displayName)}:\n`;
+  md += `class ${escMd(whoami.name || profile.displayName || 'User')}:\n`;
   if (whoami.role) md += `    role        = "${escMd(whoami.role)}"\n`;
   if (whoami.focus?.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
   if (whoami.languages?.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
@@ -389,11 +381,9 @@ function readReadme(ctx, data, profile) {
   const accentHex = (profile.accent || '#0e75b6').replace('#', '');
   const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
 
-  const displayName = profile.displayName || user;
-
   const header = buildHeader(ctx, profile);
   const stats = buildStats(header.base);
-  const whoami = buildWhoami(profile, displayName);
+  const whoami = buildWhoami(profile);
   const techStack = buildTechStack(profile);
   const projects = buildProjects(ctx, data);
   const activity = buildActivity(header.base);

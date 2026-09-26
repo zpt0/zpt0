@@ -3,10 +3,8 @@
   "allowedDesigns": ["cyberpunk-aura", "dashboard-pro"],
   "profile": {
     "displayName": "zpt0",
-    "role": "Fullstack Developer",
     "location": "",
     "website": "https://github.com/zpt0",
-    "tagline": "Building clean tools, automating workflows, shipping small projects.",
     "bio": "",
     "currently": [
       "Exploring reverse engineering techniques",
@@ -81,8 +79,7 @@
       "languages": ["TypeScript", "JavaScript", "Python", "Rust", "HTML/CSS"],
       "hardware": ["Custom PCBs", "ESP32", "Raspberry Pi"],
       "security": ["Network Analysis", "OSINT", "Reverse Engineering", "Wi-Fi Pentesting"],
-      "status": "🔨 Building things that ship — new projects incoming",
-      "philosophy": "If it works, you're not done yet."
+      "philosophy": "If it works, don't touch it."
     }
   }
 }
