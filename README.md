@@ -1,4 +1,4 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T11:41:45.042Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T11:46:50.265Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
@@ -18,7 +18,7 @@
 
 ## 🛠️ Stack
 <p align="center">
-<img src="https://img.shields.io/badge/JavaScript-f1e05a?style=for-the-badge" alt="JavaScript" /><img src="https://img.shields.io/badge/TypeScript-3178c6?style=for-the-badge" alt="TypeScript" /><img src="https://img.shields.io/badge/C%23-7355dd?style=for-the-badge" alt="C#" /><img src="https://img.shields.io/badge/Python-3572A5?style=for-the-badge" alt="Python" /><img src="https://img.shields.io/badge/HTML-e34c26?style=for-the-badge" alt="HTML" /><img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge" alt="CSS" /><img src="https://img.shields.io/badge/Shell-89e051?style=for-the-badge" alt="Shell" /><img src="https://img.shields.io/badge/Objective-C-438eff?style=for-the-badge" alt="Objective-C" /><img src="https://img.shields.io/badge/Lua-000080?style=for-the-badge" alt="Lua" /><img src="https://img.shields.io/badge/Roff-ecdebe?style=for-the-badge" alt="Roff" />
+<img src="https://img.shields.io/badge/TypeScript-3178c6?style=for-the-badge" alt="TypeScript" /><img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge" alt="CSS" /><img src="https://img.shields.io/badge/HTML-e34c26?style=for-the-badge" alt="HTML" /><img src="https://img.shields.io/badge/JavaScript-f1e05a?style=for-the-badge" alt="JavaScript" />
 </p>
 
 ## 🚀 What I'm building
