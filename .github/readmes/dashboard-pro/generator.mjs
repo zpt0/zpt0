@@ -279,8 +279,10 @@ function readReadme(ctx, data, profile) {
   md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
   md += `</p>\n\n`;
 
-  // Colored SVG banner (left-aligned)
-  md += `<img src="${bannerUrl}" alt="zpt0" width="600" />\n\n`;
+  // Full-width centered SVG banner
+  md += `<p align="center">\n`;
+  md += `  <img src="${bannerUrl}" alt="zpt0" width="100%" />\n`;
+  md += `</p>\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
