@@ -1,4 +1,4 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T17:46:37.950Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T19:49:26.266Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
@@ -8,12 +8,8 @@
   <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="100%" />
 </p>
 
-# zpt0 • Fullstack Developer
-🔗 https://github.com/zpt0
+## `> stats --show`
 
-> Building clean tools, automating workflows, shipping small projects.
-
-## 📊 Stats
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/stats-dark.svg">
   <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/stats.svg" alt="Statistics" width="720" />
@@ -28,8 +24,7 @@ class zpt0:
     languages   = ["TypeScript","JavaScript","Python","Rust","HTML/CSS"]
     hardware    = ["Custom PCBs","ESP32","Raspberry Pi"]
     security    = ["Network Analysis","OSINT","Reverse Engineering","Wi-Fi Pentesting"]
-    status      = "🔨 Building things that ship — new projects incoming"
-    philosophy  = "If it works, you're not done yet."
+    philosophy  = "If it works, don't touch it."
 ```
 
 ## `> skills --list`
@@ -91,4 +86,4 @@ class zpt0:
 </p>
 
 <hr/>
-<p align="center"><sub>zpt0 · Fullstack Developer · <a href="https://github.com/zpt0">github.com/zpt0</a></sub></p>
+<p align="center"><sub>zpt0 ·  · <a href="https://github.com/zpt0">github.com/zpt0</a></sub></p>
