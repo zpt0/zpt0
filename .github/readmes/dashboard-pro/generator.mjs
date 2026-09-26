@@ -115,6 +115,14 @@ function statStrip(data, profile, theme) {
   return out;
 }
 
+function getContributionLevel(count) {
+  if (count === 0) return 0;
+  if (count <= 2) return 1;
+  if (count <= 5) return 2;
+  if (count <= 9) return 3;
+  return 4;
+}
+
 function activityCalendar(data, theme) {
   const t = theme === 'dark' ? THEMES.dark : THEMES.light;
   const W = 700;
@@ -134,7 +142,7 @@ function activityCalendar(data, theme) {
     for (let d = 0; d < rows; d++) {
       const day = days[d];
       const count = day?.contributionCount ?? 0;
-      const level = count === 0 ? 0 : count <= 2 ? 1 : count <= 5 ? 2 : count <= 9 ? 3 : 4;
+      const level = getContributionLevel(count);
       const fill = level === 0 ? t.track : t.ramp[level - 1];
       const cx = gridX + w * step;
       const cy = gridY + d * step;
@@ -172,7 +180,7 @@ function activityCalendar(data, theme) {
 }
 
 function escMd(s) {
-  return String(s == null ? '' : s).replaceAll('|', '\\|');
+  return String(s == null ? '' : s).replaceAll('|', String.raw`\|`);
 }
 
 function escMdAttr(s) {
@@ -225,6 +233,154 @@ function renderSkillsTable(techStack) {
   return md;
 }
 
+// ----- Markdown sections -----
+
+function buildHeader(ctx, profile) {
+  const { repo, config } = ctx;
+  const user = ctx.user;
+  const accentHex = (profile.accent || '#0e75b6').replace('#', '');
+  const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
+  const displayName = profile.displayName || user;
+  const role = profile.role || '';
+  const tagline = profile.tagline || '';
+  const bannerUrl = `${base}/banner.svg`;
+
+  let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
+
+  md += `<p align="center">\n`;
+  md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
+  md += `</p>\n\n`;
+
+  md += `<p align="center">\n`;
+  md += `  <img src="${bannerUrl}" alt="zpt0" width="100%" />\n`;
+  md += `</p>\n\n`;
+
+  md += `<p align="center">\n`;
+  md += `  <a href="https://github.com/zpt0"><strong>${escMd(displayName)}</strong></a> • ${escMd(role)}\n`;
+  md += `</p>\n\n`;
+
+  if (tagline) md += `> ${escMd(tagline)}\n\n`;
+
+  return { md, base };
+}
+
+function buildStats(base) {
+  let md = `## 📊 Stats\n`;
+  md += `<picture>\n`;
+  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
+  md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
+  md += `</picture>\n\n`;
+  return md;
+}
+
+function buildWhoami(profile, displayName) {
+  const whoami = profile.whoami || {};
+  if (!whoami || !Object.keys(whoami).length) return '';
+
+  let md = `## \`> whoami\`\n\n`;
+  md += '```python\n';
+  md += `class ${escMd(whoami.name || displayName)}:\n`;
+  if (whoami.role) md += `    role        = "${escMd(whoami.role)}"\n`;
+  if (whoami.focus?.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
+  if (whoami.languages?.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
+  if (whoami.hardware?.length) md += `    hardware    = ${JSON.stringify(whoami.hardware)}\n`;
+  if (whoami.security?.length) md += `    security    = ${JSON.stringify(whoami.security)}\n`;
+  if (whoami.status) md += `    status      = "${escMd(whoami.status)}"\n`;
+  if (whoami.philosophy) md += `    philosophy  = "${escMd(whoami.philosophy)}"\n`;
+  md += '```\n\n';
+  return md;
+}
+
+function buildTechStack(profile) {
+  const techStack = profile.techStack || {};
+  if (!techStack || !Object.keys(techStack).length) return '';
+
+  let md = renderSkillsTable(techStack);
+  if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
+  return md;
+}
+
+function buildProjects(ctx, data) {
+  const { repo, user } = ctx;
+  const profileRepoName = repo.name || user;
+  const topRepos = (data.repos || [])
+    .filter(r => !r.fork && r.name !== profileRepoName)
+    .sort((a, b) => (b.stargazers || 0) - (a.stargazers || 0))
+    .slice(0, 5);
+
+  if (!topRepos.length) return '';
+
+  let md = `## \`> ls ./projects\`\n\n`;
+  md += '| Repo | Stats |\n';
+  md += '|------|-------|\n';
+  for (const r of topRepos) {
+    const name = escMd(r.name);
+    const url = r.url || `https://github.com/${user}/${r.name}`;
+    const stars = fmt(r.stargazers || 0);
+    const forks = fmt(r.forks || 0);
+    const lang = r.primaryLanguage?.name || '—';
+    md += `| [${name}](${url}) | (★ ${stars}  ⑂ ${forks}  {${lang}}) |\n`;
+  }
+  md += '\n';
+  return md;
+}
+
+function buildActivity(base) {
+  let md = `## \`> cat ./dev_log.txt\`\n\n`;
+  md += `<p align="center">\n`;
+  md += `<picture>\n`;
+  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
+  md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
+  md += `</picture>\n`;
+  md += `</p>\n\n`;
+  return md;
+}
+
+function buildCurrently(profile) {
+  const currently = profile.currently || [];
+  if (!currently.length) return '';
+
+  let md = '```text\n';
+  for (const c of currently) md += `[+] ${escMd(c)}\n`;
+  md += '[~] Sleep: optional. Coffee: mandatory.\n';
+  md += '```\n\n';
+  return md;
+}
+
+function buildSocials(profile, accentHex) {
+  const socials = profile.socials || [];
+  if (!socials.length) return '';
+
+  let md = `## \`> ifconfig connect\`\n\n`;
+  md += `<p align="center">\n`;
+  for (const s of socials) {
+    if (/^(https?:)?\/\//.test(s.label || '')) {
+      md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
+    } else {
+      const color = SOCIAL_COLORS[s.label.toLowerCase()] || accentHex;
+      const url = escUrl(s.url);
+      const logo = s.label.toLowerCase() === 'github' ? 'github' : '';
+      md += `<a href="${url}"><img src="${badgeUrl(s.label, color, 'for-the-badge', logo)}" alt="${escMdAttr(s.label)}" /></a>`;
+    }
+  }
+  md += `\n</p>\n\n`;
+  return md;
+}
+
+function buildFooter(profile, repo) {
+  const displayName = profile.displayName || repo.owner;
+  const role = profile.role || '';
+
+  let md = `<p align="center">\n`;
+  md += `  <a href="https://github.com/piyushsuthar/github-readme-quotes">\n`;
+  md += `    <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark" alt="Readme Quotes" />\n`;
+  md += `  </a>\n`;
+  md += `</p>\n\n`;
+
+  md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
+  return md;
+}
+
 // ----- Markdown -----
 
 function readReadme(ctx, data, profile) {
@@ -234,130 +390,18 @@ function readReadme(ctx, data, profile) {
   const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
 
   const displayName = profile.displayName || user;
-  const role = profile.role || '';
-  const tagline = profile.tagline || '';
-  const location = profile.location || '';
-  const website = profile.website || '';
-  const currently = profile.currently || [];
-  const socials = profile.socials || [];
-  const techStack = profile.techStack || {};
-  const whoami = profile.whoami || {};
 
-  // SVG banner (colored, works on GitHub)
-  const bannerUrl = `${base}/banner.svg`;
+  const header = buildHeader(ctx, profile);
+  const stats = buildStats(header.base);
+  const whoami = buildWhoami(profile, displayName);
+  const techStack = buildTechStack(profile);
+  const projects = buildProjects(ctx, data);
+  const activity = buildActivity(header.base);
+  const currently = buildCurrently(profile);
+  const socials = buildSocials(profile, accentHex);
+  const footer = buildFooter(profile, repo);
 
-  let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
-
-  md += `<p align="center">\n`;
-  md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
-  md += `</p>\n\n`;
-
-  // Full-width centered SVG banner
-  md += `<p align="center">\n`;
-  md += `  <img src="${bannerUrl}" alt="zpt0" width="100%" />\n`;
-  md += `</p>\n\n`;
-
-  // Subtitle under banner (centered, with link)
-  md += `<p align="center">\n`;
-  md += `  <a href="https://github.com/zpt0"><strong>${escMd(displayName)}</strong></a> • ${escMd(role)}\n`;
-  md += `</p>\n\n`;
-
-  // Tagline
-  if (tagline) md += `> ${escMd(tagline)}\n\n`;
-
-  // Stats widget
-  md += `## 📊 Stats\n`;
-  md += `<picture>\n`;
-  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
-  md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
-  md += `</picture>\n\n`;
-
-  // whoami section (terminal style)
-  if (whoami && Object.keys(whoami).length) {
-    md += `## \`> whoami\`\n\n`;
-    md += '```python\n';
-    md += `class ${escMd(whoami.name || displayName)}:\n`;
-    if (whoami.role) md += `    role        = "${escMd(whoami.role)}"\n`;
-    if (whoami.focus?.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
-    if (whoami.languages?.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
-    if (whoami.hardware?.length) md += `    hardware    = ${JSON.stringify(whoami.hardware)}\n`;
-    if (whoami.security?.length) md += `    security    = ${JSON.stringify(whoami.security)}\n`;
-    if (whoami.status) md += `    status      = "${escMd(whoami.status)}"\n`;
-    if (whoami.philosophy) md += `    philosophy  = "${escMd(whoami.philosophy)}"\n`;
-    md += '```\n\n';
-  }
-
-  // Tech Stack - 3-column table like Nexus
-  if (techStack && Object.keys(techStack).length) {
-    md += renderSkillsTable(techStack);
-    if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
-  }
-
-  // Projects section (ls style) - show top repos by stars (exclude profile repo)
-  const profileRepoName = repo.name || user;
-  const topRepos = (data.repos || [])
-    .filter(r => !r.fork && r.name !== profileRepoName)
-    .sort((a, b) => (b.stargazers || 0) - (a.stargazers || 0))
-    .slice(0, 5);
-
-  if (topRepos.length) {
-    md += `## \`> ls ./projects\`\n\n`;
-    md += '| Repo | Stats |\n';
-    md += '|------|-------|\n';
-    for (const r of topRepos) {
-      const name = escMd(r.name);
-      const url = r.url || `https://github.com/${user}/${r.name}`;
-      const stars = fmt(r.stargazers || 0);
-      const forks = fmt(r.forks || 0);
-      const lang = r.primaryLanguage?.name || '—';
-      md += `| [${name}](${url}) | (★ ${stars}  ⑂ ${forks}  {${lang}}) |\n`;
-    }
-    md += '\n';
-  }
-
-  // Activity widget (centered)
-  md += `## \`> cat ./dev_log.txt\`\n\n`;
-  md += `<p align="center">\n`;
-  md += `<picture>\n`;
-  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
-  md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
-  md += `</picture>\n`;
-  md += `</p>\n\n`;
-
-  if (currently.length) {
-    md += '```text\n';
-    for (const c of currently) md += `[+] ${escMd(c)}\n`;
-    md += '[~] Sleep: optional. Coffee: mandatory.\n';
-    md += '```\n\n';
-  }
-
-  // Social / connect
-  if (socials.length) {
-    md += `## \`> ifconfig connect\`\n\n`;
-    md += `<p align="center">\n`;
-    for (const s of socials) {
-      if (/^(https?:)?\/\//.test(s.label || '')) {
-        md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
-      } else {
-        const color = SOCIAL_COLORS[s.label.toLowerCase()] || accentHex;
-        const url = escUrl(s.url);
-        const logo = s.label.toLowerCase() === 'github' ? 'github' : '';
-        md += `<a href="${url}"><img src="${badgeUrl(s.label, color, 'for-the-badge', logo)}" alt="${escMdAttr(s.label)}" /></a>`;
-      }
-    }
-    md += `\n</p>\n\n`;
-  }
-
-  // Footer quote (centered image)
-  md += `<p align="center">\n`;
-  md += `  <a href="https://github.com/piyushsuthar/github-readme-quotes">\n`;
-  md += `    <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=dark" alt="Readme Quotes" />\n`;
-  md += `  </a>\n`;
-  md += `</p>\n\n`;
-
-  md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
-
-  return md;
+  return header.md + stats + whoami + techStack + projects + activity + currently + socials + footer;
 }
 
 // ----- Plugin entry -----
