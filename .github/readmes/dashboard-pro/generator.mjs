@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-// dashboard-pro — clean markdown profile with two compact, theme-aware widgets.
+// dashboard-pro — terminal/hacker theme profile with visual stats & activity widgets
 // Plugin entry: exports async generate(ctx). Reuses core/api.mjs for data.
 
 import { QUERY as API_QUERY, gql, fetchAllTimeCommits, processData, mockData } from '../../core/api.mjs';
 
-// Extend the shared user query with the profile fields a markdown profile needs.
-// Derived from the shared query so cyberpunk-aura stays untouched.
 const PROFILE_QUERY = API_QUERY.replace(
   '    name\n    createdAt',
   '    name\n    bio\n    location\n    websiteUrl\n    url\n    followers { totalCount }\n    createdAt'
@@ -21,6 +19,8 @@ const THEMES = {
     ramp: ['#9be9a8', '#40c463', '#30a14e', '#216e39'],
     label: '#57606a',
     value: '#1f2328',
+    accent: '#0e75b6',
+    mono: '#24292f',
   },
   dark: {
     bg: '#0d1117',
@@ -29,6 +29,8 @@ const THEMES = {
     ramp: ['#294f31', '#3c7c4c', '#47a347', '#5ed661'],
     label: '#8b949e',
     value: '#f0f6fc',
+    accent: '#58a6ff',
+    mono: '#e6edf3',
   },
 };
 
@@ -48,7 +50,7 @@ function fmt(n) {
 }
 
 function escSvg(s) {
-  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s == null ? '' : s).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
 }
 
 function escUrl(s) {
@@ -90,18 +92,18 @@ function statStrip(data, profile, theme) {
   const n = tiles.length;
   const startX = (W - n * tileW) / 2;
   let out = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profile statistics">`;
-  out += `<rect width="${W}" height="${H}" rx="14" fill="${t.bg}" stroke="${t.border}"/>`;
+  out += `<rect width="${W}" height="${H}" rx="8" fill="${t.bg}" stroke="${t.border}"/>`;
   for (let i = 0; i < n; i++) {
     const cx = startX + i * tileW + tileW / 2;
     const tile = tiles[i];
-    out += `<text x="${cx}" y="54" text-anchor="middle" font-family="${FONT_STACK}" font-size="26" font-weight="700" fill="${t.value}">${escSvg(tile.val)}</text>`;
-    out += `<text x="${cx}" y="74" text-anchor="middle" font-family="${FONT_STACK}" font-size="11" font-weight="700" fill="${t.label}" letter-spacing="1.2">${escSvg(tile.label)}</text>`;
+    out += `<text x="${cx}" y="52" text-anchor="middle" font-family="${FONT_STACK}" font-size="26" font-weight="700" fill="${t.value}">${escSvg(tile.val)}</text>`;
+    out += `<text x="${cx}" y="72" text-anchor="middle" font-family="${FONT_STACK}" font-size="10" font-weight="600" fill="${t.label}" letter-spacing="1">${escSvg(tile.label)}</text>`;
     if (i < n - 1) {
       const sx = startX + (i + 1) * tileW;
-      out += `<line x1="${sx}" y1="30" x2="${sx}" y2="84" stroke="${t.border}" stroke-width="0.8" stroke-dasharray="3 3"/>`;
+      out += `<line x1="${sx}" y1="28" x2="${sx}" y2="82" stroke="${t.border}" stroke-width="0.8" stroke-dasharray="4 4"/>`;
     }
   }
-  out += `<text x="16" y="20" font-family="${FONT_STACK}" font-size="10" fill="${t.label}" font-weight="700">STATS</text>`;
+  out += `<text x="16" y="18" font-family="${FONT_STACK}" font-size="9" fill="${t.label}" font-weight="700" letter-spacing="1">STATS</text>`;
   out += `</svg>`;
   return out;
 }
@@ -109,11 +111,11 @@ function statStrip(data, profile, theme) {
 function activityCalendar(data, theme) {
   const t = theme === 'dark' ? THEMES.dark : THEMES.light;
   const W = 700;
-  const H = 120;
-  const gridX = 50;
-  const gridY = 20;
-  const cell = 8;
-  const gap = 4;
+  const H = 110;
+  const gridX = 40;
+  const gridY = 16;
+  const cell = 7;
+  const gap = 3;
   const rows = 7;
   const step = cell + gap;
   const weeks = (data.calendar.weeks || []).slice(-53);
@@ -129,7 +131,7 @@ function activityCalendar(data, theme) {
       const fill = level === 0 ? t.track : t.ramp[level - 1];
       const cx = gridX + w * step;
       const cy = gridY + d * step;
-      cells += `<rect x="${cx}" y="${cy}" width="${cell}" height="${cell}" rx="2" fill="${fill}"/>`;
+      cells += `<rect x="${cx}" y="${cy}" width="${cell}" height="${cell}" rx="1.5" fill="${fill}"/>`;
     }
   }
 
@@ -143,20 +145,20 @@ function activityCalendar(data, theme) {
     ['More', t.ramp[3]],
   ];
   let leg = '';
-  const legX = 14;
-  const legY = H - 14;
+  const legX = 10;
+  const legY = H - 10;
   for (let i = 0; i < legend.length; i++) {
-    const cx = legX + i * 14;
-    leg += `<rect x="${cx}" y="${legY}" width="8" height="8" rx="1.5" fill="${legend[i][1]}"/>`;
+    const cx = legX + i * 12;
+    leg += `<rect x="${cx}" y="${legY}" width="7" height="7" rx="1" fill="${legend[i][1]}"/>`;
     if (legend[i][0]) {
-      leg += `<text x="${cx + 12}" y="${legY + 4}" font-family="${FONT_STACK}" font-size="9" fill="${t.label}" dominant-baseline="middle">${legend[i][0]}</text>`;
+      leg += `<text x="${cx + 10}" y="${legY + 3}" font-family="${FONT_STACK}" font-size="7" fill="${t.label}" dominant-baseline="middle">${legend[i][0]}</text>`;
     }
   }
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Contribution activity">`;
-  svg += `<rect width="${W}" height="${H}" rx="12" fill="${t.bg}" stroke="${t.border}"/>`;
+  svg += `<rect width="${W}" height="${H}" rx="8" fill="${t.bg}" stroke="${t.border}"/>`;
   svg += cells;
-  svg += `<text x="${W - 16}" y="16" text-anchor="end" font-family="${FONT_STACK}" font-size="11" font-weight="700" fill="${t.label}">${fmt(total)} contributions · last year</text>`;
+  svg += `<text x="${W - 12}" y="14" text-anchor="end" font-family="${FONT_STACK}" font-size="10" font-weight="600" fill="${t.label}">${fmt(total)} contributions · last year</text>`;
   svg += leg;
   svg += `</svg>`;
   return svg;
@@ -164,128 +166,153 @@ function activityCalendar(data, theme) {
 
 // ----- Markdown -----
 
-  function readReadme(ctx, data, profile) {
-    const { repo, config } = ctx;
-    const user = ctx.user;
-    const accentHex = (profile.accent || '#0e75b6').replace('#', '');
-    const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
+function readReadme(ctx, data, profile) {
+  const { repo, config } = ctx;
+  const user = ctx.user;
+  const accentHex = (profile.accent || '#0e75b6').replace('#', '');
+  const base = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${config.activeDesign}/assets`;
 
-    const displayName = profile.displayName || user;
-    const role = profile.role || '';
-    const tagline = profile.tagline || '';
-    const location = profile.location || '';
-    const website = profile.website || '';
-    const bio = profile.bio || '';
-    const currently = profile.currently || [];
-    const socials = profile.socials || [];
-    const projects = profile.focusProjects || data.topProjects || [];
-    const techStack = profile.techStack || {};
+  const displayName = profile.displayName || user;
+  const role = profile.role || '';
+  const tagline = profile.tagline || '';
+  const location = profile.location || '';
+  const website = profile.website || '';
+  const bio = profile.bio || '';
+  const currently = profile.currently || [];
+  const socials = profile.socials || [];
+  const projects = profile.focusProjects || data.topProjects || [];
+  const techStack = profile.techStack || {};
+  const whoami = profile.whoami || {};
 
-    const suffix = [location ? `📍 ${location}` : '', website ? `🔗 ${website}` : '']
-      .filter(Boolean).join(' · ');
+  const suffix = [location ? `📍 ${location}` : '', website ? `🔗 ${website}` : '']
+    .filter(Boolean).join(' · ');
 
-    function escMd(s) {
-      return String(s == null ? '' : s).replace(/\|/g, '\\|');
+  function escMd(s) {
+    return String(s == null ? '' : s).replace(/\|/g, '\\|');
+  }
+  function escMdAttr(s) {
+    return String(s == null ? '' : s).replace(/"/g, '%22');
+  }
+
+  function renderSkillBars(skills, label) {
+    const maxBar = 12;
+    let out = `### ${escMd(label)}\n\n`;
+    out += '```text\n';
+    for (const s of skills) {
+      const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
+      const empty = maxBar - filled;
+      const bar = '█'.repeat(filled) + '░'.repeat(empty);
+      const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
+      out += `${escMd(s.name).padEnd(18)} ${bar}  ${stars}\n`;
     }
-    function escMdAttr(s) {
-      return String(s == null ? '' : s).replace(/"/g, '%22');
-    }
+    out += '```\n\n';
+    return out;
+  }
 
-    function renderSkillBars(skills) {
-      const maxBar = 12;
-      let out = '';
-      for (const s of skills) {
-        const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
-        const empty = maxBar - filled;
-        const bar = '█'.repeat(filled) + '░'.repeat(empty);
-        const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
-        out += `${escMd(s.name).padEnd(22)} ${bar}  ${stars}\n`;
+  function renderTools(tools, label) {
+    let out = `### ${escMd(label)}\n\n`;
+    for (const t of tools) {
+      out += `- **${escMd(t.name)}** — ${escMd(t.type)}\n`;
+    }
+    return out + '\n';
+  }
+
+  // ASCII banner
+  const asciiBanner = `██████╗  █████╗ ███╗   ██╗████████╗██╗  ██╗
+██╔══██╗██╔══██╗████╗  ██║╚══██╔══╝╚██╗██╔╝
+██████╔╝███████║██╔██╗ ██║   ██║    ╚███╔╝ 
+██╔═══╝ ██╔══██║██║╚██╗██║   ██║    ██╔██╗ 
+██║     ██║  ██║██║ ╚████║   ██║   ██╔╝ ██╗
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝`;
+
+  let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
+
+  md += `<p align="center">\n`;
+  md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
+  md += `</p>\n\n`;
+
+  // ASCII banner
+  md += `\`\`\`\n${asciiBanner}\n\`\`\`\n\n`;
+
+  // Header with role
+  md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
+  if (suffix) md += `${suffix}\n`;
+  md += `\n`;
+
+  // Tagline
+  if (tagline) md += `> ${escMd(tagline)}\n\n`;
+
+  // Stats widget
+  md += `## 📊 Stats\n`;
+  md += `<picture>\n`;
+  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
+  md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
+  md += `</picture>\n\n`;
+
+  // whoami section (terminal style)
+  if (whoami && Object.keys(whoami).length) {
+    md += `## \`> whoami\`\n\n`;
+    md += '```python\n';
+    md += `class ${escMd(whoami.name || displayName)}:\n`;
+    if (whoami.role) md += `    role        = "${escMd(whoami.role)}"\n`;
+    if (whoami.focus && whoami.focus.length) md += `    focus       = ${JSON.stringify(whoami.focus)}\n`;
+    if (whoami.languages && whoami.languages.length) md += `    languages   = ${JSON.stringify(whoami.languages)}\n`;
+    if (whoami.hardware && whoami.hardware.length) md += `    hardware    = ${JSON.stringify(whoami.hardware)}\n`;
+    if (whoami.security && whoami.security.length) md += `    security    = ${JSON.stringify(whoami.security)}\n`;
+    if (whoami.status) md += `    status      = "${escMd(whoami.status)}"\n`;
+    if (whoami.philosophy) md += `    philosophy  = "${escMd(whoami.philosophy)}"\n`;
+    md += '```\n\n';
+  }
+
+  // Tech Stack - detailed categories
+  if (techStack && Object.keys(techStack).length) {
+    md += `## \`> skills --list\`\n\n`;
+    for (const [category, skills] of Object.entries(techStack)) {
+      if (!skills || !skills.length) continue;
+      if (category === 'Frameworks & Tools') {
+        md += renderTools(skills, category);
+      } else {
+        md += renderSkillBars(skills, category);
       }
-      return out ? `\`\`\`text\n${out}\`\`\`\n` : '';
     }
+  }
 
-    function renderTools(tools) {
-      let out = '';
-      for (const t of tools) {
-        out += `- **${escMd(t.name)}** — ${escMd(t.type)}\n`;
-      }
-      return out;
+  // Projects section (ls style)
+  if (projects && projects.length) {
+    md += `## \`> ls ./projects\`\n\n`;
+    md += '```text\n';
+    for (const p of projects) {
+      const name = escMd(p.name);
+      const desc = escMd(p.desc || '');
+      const bar = '█'.repeat(16);
+      md += `drwx------ ${name.padEnd(24)} ${bar}  <-- ${desc}\n`;
     }
+    md += '```\n\n';
+    md += `> 👾 **Stealth mode activated.** New projects are in the works. Details classified until release. Watch the repos.\n\n`;
+  }
 
-    let md = `<!-- ${displayName} profile | dashboard-pro | Generated ${new Date().toISOString()} -->\n\n`;
+  // Activity widget
+  md += `## \`> cat ./dev_log.txt\`\n\n`;
+  md += `<picture>\n`;
+  md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
+  md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
+  md += `</picture>\n\n`;
 
+  if (currently.length) {
+    md += '```text\n';
+    for (const c of currently) md += `[+] ${escMd(c)}\n`;
+    md += '[~] Sleep: optional. Coffee: mandatory.\n';
+    md += '```\n\n';
+  }
+
+  // Social / connect
+  if (socials.length) {
+    md += `## \`> ifconfig connect\`\n\n`;
     md += `<p align="center">\n`;
-    md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
-    md += `</p>\n\n`;
-
-    md += `# ${escMd(displayName)}\n`;
-    md += `**${escMd(role)}**${suffix ? `  \n${suffix}` : ''}\n\n`;
-    if (bio) md += `${escMd(bio)}\n\n`;
-    if (tagline) md += `> ${escMd(tagline)}\n\n`;
-
-    md += `## 📊 Stats\n`;
-    md += `<picture>\n`;
-    md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/stats-dark.svg">\n`;
-    md += `  <img src="${base}/stats.svg" alt="Statistics" width="720" />\n`;
-    md += `</picture>\n\n`;
-
-    // Tech Stack - detailed categories
-    if (techStack && Object.keys(techStack).length) {
-      md += `## 🛠️ Tech Stack\n\n`;
-      for (const [category, skills] of Object.entries(techStack)) {
-        if (!skills || !skills.length) continue;
-        if (category === 'Frameworks & Tools') {
-          md += `### ${escMd(category)}\n\n`;
-          md += renderTools(skills);
-        } else {
-          md += `### ${escMd(category)}\n\n`;
-          md += renderSkillBars(skills);
-        }
-        md += `\n`;
-      }
-    } else if (data.languages && data.languages.length) {
-      // fallback to simple badges
-      md += `## 🛠️ Stack\n`;
-      md += `<p align="center">\n`;
-      for (const l of data.languages.slice(0, 10)) {
-        const color = (l.color || '#555').replace('#', '');
-        md += `<img src="https://img.shields.io/badge/${encodeURIComponent(l.name)}-${color}?style=for-the-badge" alt="${escMdAttr(l.name)}" />`;
-      }
-      md += `\n</p>\n\n`;
-    }
-
-    if (projects && projects.length) {
-      md += `## 🚀 What I'm building\n`;
-      for (const p of projects) {
-        const desc = p.desc || '';
-        if (p.url) {
-          md += `- [**${escMd(p.name)}**](${escUrl(p.url)}) — ${escMd(desc)}\n`;
-        } else {
-          md += `- **${escMd(p.name)}** — ${escMd(desc)}\n`;
-        }
-      }
-      md += `\n`;
-    }
-
-    md += `## 📈 Activity\n`;
-    md += `<picture>\n`;
-    md += `  <source media="(prefers-color-scheme: dark)" srcset="${base}/calendar-dark.svg">\n`;
-    md += `  <img src="${base}/calendar.svg" alt="Activity" width="700" />\n`;
-    md += `</picture>\n\n`;
-
-    if (currently.length) {
-      md += `## 🌱 Currently\n`;
-      for (const c of currently) md += `- ${escMd(c)}\n`;
-      md += `\n`;
-    }
-
-    if (socials.length) {
-      md += `## 💬 Find me\n`;
-      md += `<p align="center">\n`;
-      for (const s of socials) {
-        if (/^(https?:)?\/\//.test(s.label || '')) {
-          md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
-        } else {
+    for (const s of socials) {
+      if (/^(https?:)?\/\//.test(s.label || '')) {
+        md += `[${escMd(s.url || s.label)}](${escUrl(s.url || s.label)})  `;
+      } else {
         const color = SOCIAL_COLORS[s.label.toLowerCase()] || accentHex;
         const url = escUrl(s.url);
         const logo = s.label.toLowerCase() === 'github' ? 'github' : '';
@@ -295,16 +322,18 @@ function activityCalendar(data, theme) {
     md += `\n</p>\n\n`;
   }
 
+  // Footer quote
+  md += `\`\`\`\n`;
+  md += `╔═══════════════════════════════════════════════════════════╗\n`;
+  md += `║  "Stay curious. Stay creative.                             ║\n`;
+  md += `║   Always push the boundaries of what's possible."          ║\n`;
+  md += `║                                              — ${escMd(displayName)}  ║\n`;
+  md += `╚═══════════════════════════════════════════════════════════╝\n`;
+  md += `\`\`\`\n\n`;
+
   md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
 
   return md;
-
-  function escMd(s) {
-    return String(s == null ? '' : s).replace(/\|/g, '\\|');
-  }
-  function escMdAttr(s) {
-    return String(s == null ? '' : s).replace(/"/g, '%22');
-  }
 }
 
 // ----- Plugin entry -----
@@ -318,7 +347,6 @@ export async function generate(ctx) {
   if (token) {
     console.log(`Fetching data for @${username}...`);
     try {
-      // Try extended query first (needs PAT with read:user)
       const user = await gql(token, PROFILE_QUERY, { login: username });
       const u = user.user;
       console.log(`  Account created: ${u.createdAt}`);
@@ -328,7 +356,6 @@ export async function generate(ctx) {
       profile._followers = u.followers ? u.followers.totalCount : null;
       data = processData(u);
     } catch (e) {
-      // If extended query fails (e.g., no read:user scope), fall back to basic query
       if (e.message.includes('403') || e.message.includes('401') || e.message.includes('Could not resolve to a User')) {
         console.log('  Extended query failed, falling back to basic repo data...');
         try {
