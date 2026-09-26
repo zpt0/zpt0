@@ -243,18 +243,28 @@ function renderToolsLine(tools, label) {
     md += '| ' + categories.map(() => '---').join(' | ') + ' |\n';
 
     for (let row = 0; row < maxRows; row++) {
-      const cells = categories.map(c => {
+      // Row 1: Skill names
+      const nameCells = categories.map(c => {
+        if (row < c.skills.length) {
+          return escMd(c.skills[row].name);
+        }
+        return '';
+      });
+      md += '| ' + nameCells.join(' | ') + ' |\n';
+
+      // Row 2: Bar + stars
+      const barCells = categories.map(c => {
         if (row < c.skills.length) {
           const s = c.skills[row];
           const filled = Math.max(1, Math.round((s.level / 5) * maxBar));
           const empty = maxBar - filled;
           const bar = '█'.repeat(filled) + '░'.repeat(empty);
           const stars = '★'.repeat(s.level) + '☆'.repeat(5 - s.level);
-          return `${escMd(s.name).padEnd(18)} ${bar} ${stars}`;
+          return `${bar}  ${stars}`;
         }
         return '';
       });
-      md += '| ' + cells.join(' | ') + ' |\n';
+      md += '| ' + barCells.join(' | ') + ' |\n';
     }
 
     md += '\n</p>\n\n';
@@ -357,16 +367,14 @@ function renderToolsLine(tools, label) {
     md += `\n</p>\n\n`;
   }
 
-  // Footer quote (centered)
-  md += `<p align="center">\n`;
+  // Footer quote
   md += `\`\`\`\n`;
   md += `╔═══════════════════════════════════════════════════════════╗\n`;
   md += `║  "Stay curious. Stay creative.                             ║\n`;
   md += `║   Always push the boundaries of what's possible."          ║\n`;
   md += `║                                              — ${escMd(displayName)}  ║\n`;
   md += `╚═══════════════════════════════════════════════════════════╝\n`;
-  md += `\`\`\`\n`;
-  md += `</p>\n\n`;
+  md += `\`\`\`\n\n`;
 
   md += `<hr/>\n<p align="center"><sub>${escMd(displayName)} · ${escMd(role)} · <a href="https://github.com/${repo.owner}">github.com/${repo.owner}</a></sub></p>\n`;
 
