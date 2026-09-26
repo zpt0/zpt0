@@ -280,10 +280,8 @@ function readReadme(ctx, data, profile) {
   md += `  <img src="https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&label=Profile%20views&color=${accentHex}&style=flat" alt="Profile views" />\n`;
   md += `</p>\n\n`;
 
-  // Colored SVG banner (centered - GitHub compatible)
-  md += `<p align="center">\n`;
-  md += `  <img src="${bannerUrl}" alt="zpt0" width="600" />\n`;
-  md += `</p>\n\n`;
+  // Colored SVG banner (left-aligned)
+  md += `<img src="${bannerUrl}" alt="zpt0" width="600" />\n\n`;
 
   // Header with role
   md += `# ${escMd(displayName)} ${escMd(role ? `• ${role}` : '')}\n`;
@@ -321,15 +319,15 @@ function readReadme(ctx, data, profile) {
     if (techStack['Frameworks & Tools']) md += renderToolsLine(techStack['Frameworks & Tools'], 'Frameworks & Tools');
   }
 
-  // Projects section (ls style) - show top repos by stars
+  // Projects section (ls style) - show top repos by stars (exclude profile repo)
+  const profileRepoName = repo.name || user;
   const topRepos = (data.repos || [])
-    .filter(r => !r.fork)
+    .filter(r => !r.fork && r.name !== profileRepoName)
     .sort((a, b) => (b.stargazers || 0) - (a.stargazers || 0))
     .slice(0, 5);
 
   if (topRepos.length) {
     md += `## \`> ls ./projects\`\n\n`;
-    md += '```text\n';
     for (const r of topRepos) {
       const name = escMd(r.name);
       const url = r.url || `https://github.com/${user}/${r.name}`;
@@ -340,7 +338,7 @@ function readReadme(ctx, data, profile) {
       const bar = '█'.repeat(16);
       md += `drwx------ [${name}](${url}) ${bar}  <-- ${desc}  (★ ${stars}  ⑂ ${forks}  {${lang}})\n`;
     }
-    md += '```\n\n';
+    md += '\n';
   }
 
   // Activity widget (centered)
