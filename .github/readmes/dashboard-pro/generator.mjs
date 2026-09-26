@@ -11,7 +11,7 @@ const PROFILE_QUERY = API_QUERY.replace(
   '    name\n    bio\n    location\n    websiteUrl\n    url\n    followers { totalCount }\n    createdAt'
 );
 
-const FONT_STACK = `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`;
+const FONT_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`;
 
 const THEMES = {
   light: {
