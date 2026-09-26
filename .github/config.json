@@ -71,6 +71,16 @@
         { "name": "Burp Suite", "type": "Web Security" },
         { "name": "VS Code", "type": "Development Environment" }
       ]
+    },
+    "whoami": {
+      "name": "zpt0",
+      "role": "Fullstack Developer",
+      "focus": ["Fullstack Dev", "Discord Bots", "Automation", "Security Research", "Reverse Engineering", "OSINT"],
+      "languages": ["TypeScript", "JavaScript", "Python", "Rust", "HTML/CSS"],
+      "hardware": ["Custom PCBs", "ESP32", "Raspberry Pi"],
+      "security": ["Network Analysis", "OSINT", "Reverse Engineering", "Wi-Fi Pentesting"],
+      "status": "🔨 Building things that ship — new projects incoming",
+      "philosophy": "If it works, you're not done yet."
     }
   }
 }
