@@ -1,17 +1,12 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T12:15:36.996Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-09-26T13:02:26.871Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
 </p>
 
-```
-██████╗  █████╗ ███╗   ██╗████████╗██╗  ██╗
-██╔══██╗██╔══██╗████╗  ██║╚══██╔══╝╚██╗██╔╝
-██████╔╝███████║██╔██╗ ██║   ██║    ╚███╔╝ 
-██╔═══╝ ██╔══██║██║╚██╗██║   ██║    ██╔██╗ 
-██║     ██║  ██║██║ ╚████║   ██║   ██╔╝ ██╗
-╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝
-```
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg" alt="zpt0" width="600" />
+</p>
 
 # zpt0 • Fullstack Developer
 🔗 https://github.com/zpt0
@@ -39,75 +34,24 @@ class zpt0:
 
 ## `> skills --list`
 
-### Languages
+<p align="center">
 
-```text
-TypeScript         ████████████  ★★★★★
-JavaScript         ████████████  ★★★★★
-Python             ██████████░░  ★★★★☆
-Rust               ███████░░░░░  ★★★☆☆
-```
+| 💻 Languages | 🔩 Hardware | 🛡️ Security |
+| --- | --- | --- |
+| TypeScript | PC Hardware | Networking |
+| ████████████  ★★★★★ | ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ |
+| JavaScript | Troubleshooting | OSINT |
+| ████████████  ★★★★★ | ██████████░░  ★★★★☆ | ███████░░░░░  ★★★☆☆ |
+| Python | ESP32 | Reverse Engineering |
+| ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ | ███████░░░░░  ★★★☆☆ |
+| Rust | Raspberry Pi | Wireshark |
+| ███████░░░░░  ★★★☆☆ | ██████████░░  ★★★★☆ | ██████████░░  ★★★★☆ |
+|  |  | Nmap |
+|  |  | ██████████░░  ★★★★☆ |
 
-### Web & Backend
+</p>
 
-```text
-Web Development    ██████████░░  ★★★★☆
-REST APIs          ██████████░░  ★★★★☆
-Backend Development ██████████░░  ★★★★☆
-```
-
-### Databases
-
-```text
-SQL                ██████████░░  ★★★★☆
-SQLite             ██████████░░  ★★★★☆
-PostgreSQL         ██████████░░  ★★★★☆
-```
-
-### AI & Automation
-
-```text
-AI Integration     ██████████░░  ★★★★☆
-Automation         ██████████░░  ★★★★☆
-AI APIs            ██████████░░  ★★★★☆
-```
-
-### Networking & Security
-
-```text
-Networking         ██████████░░  ★★★★☆
-OSINT              ███████░░░░░  ★★★☆☆
-Reverse Engineering ███████░░░░░  ★★★☆☆
-```
-
-### Systems
-
-```text
-Linux              ████████████  ★★★★★
-Windows            ██████████░░  ★★★★☆
-CLI / Shell        ██████████░░  ★★★★☆
-System Administration ██████████░░  ★★★★☆
-```
-
-### Hardware
-
-```text
-PC Hardware        ██████████░░  ★★★★☆
-Troubleshooting    ██████████░░  ★★★★☆
-```
-
-### Frameworks & Tools
-
-- **React** — TypeScript / JavaScript
-- **Node.js** — Backend / Runtime
-- **Bun** — JavaScript / TypeScript Runtime
-- **Git** — Version Control
-- **GitHub** — Development / Collaboration
-- **Docker** — Containers
-- **Wireshark** — Network Analysis
-- **Nmap** — Network Analysis
-- **Burp Suite** — Web Security
-- **VS Code** — Development Environment
+**Frameworks & Tools:** `React` `Node.js` `Bun` `Git` `GitHub` `Docker` `Burp Suite` `VS Code`
 
 ## `> ls ./projects`
 
@@ -117,14 +61,14 @@ drwx------ devinspire               ██████████████�
 drwx------ nightcord                ████████████████  <-- Custom Discord tools and utilities for server management
 ```
 
-> 👾 **Stealth mode activated.** New projects are in the works. Details classified until release. Watch the repos.
-
 ## `> cat ./dev_log.txt`
 
+<p align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/calendar-dark.svg">
   <img src="https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/calendar.svg" alt="Activity" width="700" />
 </picture>
+</p>
 
 ```text
 [+] Exploring reverse engineering techniques
