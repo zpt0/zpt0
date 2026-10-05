@@ -1,4 +1,4 @@
-<!-- zpt0 profile | dashboard-pro | Generated 2026-10-05T16:00:56.374Z -->
+<!-- zpt0 profile | dashboard-pro | Generated 2026-10-05T22:37:42.190Z -->
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=zpt0&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
@@ -56,6 +56,7 @@ class zpt0:
 | [DC-Lyra](https://github.com/zpt0/DC-Lyra) | (★ 2  ⑂ 2  {TypeScript}) |
 | [Questcord](https://github.com/zpt0/Questcord) | (★ 1  ⑂ 0  {TypeScript}) |
 | [Git2Page](https://github.com/zpt0/Git2Page) | (★ 1  ⑂ 0  {TypeScript}) |
+| [COSTUM-BIO-PAGE-zpt0](https://github.com/zpt0/COSTUM-BIO-PAGE-zpt0) | (★ 0  ⑂ 0  {JavaScript}) |
 
 ## `> cat ./dev_log.txt`
 
