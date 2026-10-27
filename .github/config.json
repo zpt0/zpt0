@@ -1,87 +1,83 @@
 {
-  "activeDesign": "cyberpunk-aura",
-  "allowedDesigns": ["cyberpunk-aura", "dashboard-pro"],
+  "activeDesign": "minimal",
+  "allowedDesigns": ["minimal", "cyberpunk-aura", "dashboard-pro"],
   "profile": {
     "displayName": "zpt0",
     "location": "",
-    "website": "https://github.com/zpt0",
+    "website": "https://zpt0.dpdns.org",
     "bio": "",
-    "accent": "#0e75b6",
-    "headerImage": "https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/header.svg",
-    "bannerImage": "https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg",
+    "accent": "#000000",
     "whoami": {
       "displayName": "zpt0",
       "role": "Fullstack Developer",
-      "roleDescription": "building clean APIs, robust tests, and solid CI/CD pipelines",
-      "intro": "TypeScript-first. React/Next.js on the frontend. Node.js with NestJS or Express/Fastify on the backend. PostgreSQL + Prisma/Drizzle for data.\n\nfocus on saubere APIs, Tests und CI/CD - nicht auf buzzwords.",
-      "whatIdo": "i build full-stack TypeScript applications with clean architecture.\n\nfrontend with React/Next.js, backend with Node.js (NestJS or Express/Fastify), PostgreSQL with Prisma or Drizzle for the database.\n\nonly add Redis when it actually makes sense. Docker for containerization. GitHub Actions for CI/CD. One hosting provider, not all of them.\n\nsentry for monitoring. vitest/jest + playwright for testing.",
-      "experience": "years of building and breaking things - from Discord bots to full-stack web applications to security research tools.",
-      "alsoGoodAt": "nebenbei gut in Rust, Go und Python. AI stack - backend Kenntnisse, nicht Frontend-AI-Dings."
-    },      "projects": [
-        {
-          "name": "DC-Lyra",
-          "repository": "DC-Lyra",
-          "tagline": "A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management"
-        }
-      ],
-    "focusProjects": [
+      "roleDescription": "I build whatever I feel like building - no niche, no roadmap.",
+      "intro": "Most of it ends up in TypeScript. Discord bots and client plugins are what I touch the most, but a project only has to sound fun to get started - sometimes a small static page, sometimes a tool only I will ever use.\n\nNo stack by default: a framework, a build step or a dependency has to earn its place.",
+      "whatIdo": "whatever the current idea is. TypeScript when it pays off, vanilla JS when it doesn't, and a build step only if the project actually needs one.",
+      "experience": "self-taught and learning by shipping - everything here started as something I wanted for myself.",
+      "alsoGoodAt": "sometimes it is complete nonsense nobody needs. I build it anyway, because I felt like it."
+    },
+    "projects": [
+      {
+        "name": "Clonecord",
+        "repository": "Clonecord",
+        "tagline": "a Vencord plugin that lets you clone Discord servers"
+      },
+      {
+        "name": "Questcord",
+        "repository": "Questcord",
+        "tagline": "a Vencord plugin that automates Discord Quests with real-time progress tracking"
+      },
       {
         "name": "DC-Lyra",
-        "url": "https://github.com/zpt0/DC-Lyra",
-        "tagline": "a modern, modular Discord music bot with high-quality Lavalink audio and custom queue management",
-        "metrics": [
-          "- modular plugin architecture",
-          "- Lavalink integration for high-quality audio",
-          "- custom queue management system"
-        ],
-        "highlight": "built for reliability and extensibility - the kind of bot that just works.",
-        "install": "git clone https://github.com/zpt0/DC-Lyra && cd DC-Lyra && npm install",
-        "flow": " discord → DC-Lyra → Lavalink → your ears"
+        "repository": "DC-Lyra",
+        "tagline": "a modular Discord music bot with Lavalink audio, custom playlists and dynamic filters"
       },
       {
-        "name": "devinspire",
-        "url": "https://github.com/zpt0/devinspire",
-        "tagline": "spice up your GitHub README with random dev quotes",
-        "metrics": [
-          "- custom styles",
-          "- dynamic content",
-          "- easy to integrate"
-        ],
-        "highlight": "because every coder needs a little inspiration."
+        "name": "Git2Page",
+        "repository": "Git2Page",
+        "tagline": "create and publish a dynamic portfolio by just providing your GitHub username"
       },
       {
-        "name": "nightcord",
-        "url": "https://github.com/zpt0/nightcord",
-        "tagline": "custom Discord tools and utilities for server management",
-        "metrics": [
-          "- server management tools",
-          "- custom utilities",
-          "- privacy-focused"
-        ],
-        "highlight": "tools that make server management less painful."
+        "name": "COSTUM-BIO-PAGE-zpt0",
+        "repository": "COSTUM-BIO-PAGE-zpt0",
+        "tagline": "a static bio page in the guns.lol style, zero dependencies"
       }
-    ],      "stackIcons": {
-        "languages": "ts",
-        "frameworks": "nextjs,nodejs,nestjs,express,postgres,prisma,docker,github"
+    ],
+    "focusProjects": [
+      {
+        "name": "Clonecord",
+        "url": "https://github.com/zpt0/Clonecord",
+        "tagline": "clone Discord servers from the client, as a Vencord plugin"
       },
+      {
+        "name": "Questcord",
+        "url": "https://github.com/zpt0/Questcord",
+        "tagline": "automates Discord Quests with real-time progress tracking"
+      },
+      {
+        "name": "Git2Page",
+        "url": "https://github.com/zpt0/Git2Page",
+        "tagline": "turns a GitHub username into a published portfolio page"
+      }
+    ],
+    "stackIcons": {
+      "languages": "ts,js,html,css",
+      "frameworks": "nodejs,discordjs,git,github"
+    },
     "techBadges": [
-    { "name": "TypeScript", "color": "3178C6", "logo": "typescript" },
-    { "name": "React", "color": "61DAFB", "logo": "react" },
-    { "name": "Next.js", "color": "000000", "logo": "nextdotjs" },
-    { "name": "Node.js", "color": "339933", "logo": "node.js" },
-    { "name": "NestJS", "color": "E0234E", "logo": "nestjs" },
-    { "name": "Express", "color": "FFFFFF", "logo": "express" },
-    { "name": "PostgreSQL", "color": "4169E1", "logo": "postgresql" },
-    { "name": "Prisma", "color": "2D3748", "logo": "prisma" },
-    { "name": "Drizzle", "color": "3388FF", "logo": "drizzle" },
-    { "name": "Docker", "color": "2496ED", "logo": "docker" },
-    { "name": "GitHub Actions", "color": "20889B", "logo": "githubactions" },
-    { "name": "Sentry", "color": "362D59", "logo": "sentry" },
-    { "name": "Vitest", "color": "6E9F1C", "logo": "vitest" },
-    { "name": "Playwright", "color": "2EAD33", "logo": "playwright" }
-  ],
+      { "name": "TypeScript", "color": "000000", "logo": "typescript" },
+      { "name": "JavaScript", "color": "000000", "logo": "javascript" },
+      { "name": "Node.js", "color": "000000", "logo": "nodedotjs" },
+      { "name": "discord.js", "color": "000000", "logo": "discorddotjs" },
+      { "name": "HTML", "color": "000000", "logo": "html5" },
+      { "name": "CSS", "color": "000000", "logo": "css3" },
+      { "name": "Git", "color": "000000", "logo": "git" },
+      { "name": "GitHub", "color": "000000", "logo": "github" }
+    ],
     "links": [
-      { "label": "github", "url": "https://github.com/zpt0", "color": "24292E", "logo": "github" }
+      { "label": "github", "url": "https://github.com/zpt0", "color": "000000", "logo": "github" },
+      { "label": "discord", "url": "https://discord.gg/MKU8zvHBBJ", "color": "000000", "logo": "discord" },
+      { "label": "zpt0.connect@outlook.com", "url": "mailto:zpt0.connect@outlook.com", "color": "000000", "logo": "gmail" }
     ]
   }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "minimal",
+  "version": "1.0.0",
+  "entry": "generator.mjs",
+  "output": {
+    "assetsDir": "assets",
+    "readmePath": "../../../README.md"
+  },
+  "capabilities": ["write-readme"]
+}

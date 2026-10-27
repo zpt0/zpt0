@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// GitHub GraphQL API helpers — shared across all plugins.
-// Zero dependencies, uses built-in fetch.
 
 const GQL_URL = 'https://api.github.com/graphql';
 
@@ -87,35 +85,38 @@ export async function fetchAllTimeCommits(username, token, createdAt) {
 }
 
 export function mockData() {
+  let contributions = 0;
   const weeks = [];
   for (let w = 0; w < 52; w++) {
     const days = [];
     for (let d = 0; d < 7; d++) {
+      const count = Math.floor(Math.random() * 8);
+      contributions += count;
       const date = new Date(Date.now() - (52 - w) * 7 * 86400000 + d * 86400000);
-      days.push({ contributionCount: Math.floor(Math.random() * 8), date: date.toISOString().split('T')[0], weekday: d });
+      days.push({ contributionCount: count, date: date.toISOString().split('T')[0], weekday: d });
     }
     weeks.push({ contributionDays: days });
   }
+  // Tokenless preview: the real public repos of @zpt0 (counts live, calendar random).
   const mockRepos = [
-    { name: 'DC-Lyra', description: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management', stargazers: 42, forks: 8, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/DC-Lyra' },
-    { name: 'devinspire', description: 'Spice up your GitHub README with random dev quotes. Custom styles, dynamic content, easy integration.', stargazers: 28, forks: 5, primaryLanguage: { name: 'JavaScript', color: '#f1e05a' }, fork: false, url: 'https://github.com/zpt0/devinspire' },
-    { name: 'nightcord', description: 'Everything Discord doesn\'t build, we create. Custom Discord tools and utilities for server management.', stargazers: 15, forks: 3, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/nightcord' },
-    { name: 'zpt0', description: 'My GitHub profile', stargazers: 12, forks: 2, primaryLanguage: { name: 'HTML', color: '#e34c26' }, fork: false, url: 'https://github.com/zpt0/zpt0' },
+    { name: 'Clonecord', description: 'A simple tool to clone Discord servers.', stargazers: 4, forks: 2, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/Clonecord' },
+    { name: 'Questcord', description: 'A Vencord plugin that automates Discord Quests with real-time progress tracking.', stargazers: 3, forks: 1, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/Questcord' },
+    { name: 'DC-Lyra', description: 'A modern, modular Discord music bot with high-quality Lavalink audio and custom playlists.', stargazers: 2, forks: 2, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/DC-Lyra' },
+    { name: 'Git2Page', description: 'Create and publish a dynamic portfolio by just providing your GitHub username.', stargazers: 1, forks: 0, primaryLanguage: { name: 'TypeScript', color: '#3178c6' }, fork: false, url: 'https://github.com/zpt0/Git2Page' },
+    { name: 'COSTUM-BIO-PAGE-zpt0', description: 'A static bio page in the guns.lol style, zero dependencies.', stargazers: 1, forks: 0, primaryLanguage: { name: 'JavaScript', color: '#f1e05a' }, fork: false, url: 'https://github.com/zpt0/COSTUM-BIO-PAGE-zpt0' },
   ];
   return {
-    stats: { totalStars: 12, totalForks: 5, totalRepos: 24, totalCommits: 847 },
+    stats: { totalStars: 11, totalForks: 5, totalRepos: 7, totalCommits: contributions },
     languages: [
-      { name: 'TypeScript', color: '#3178c6', size: 35000, repos: 5, percentage: 35 },
-      { name: 'Python', color: '#3572A5', size: 20000, repos: 3, percentage: 20 },
-      { name: 'Rust', color: '#dea584', size: 15000, repos: 2, percentage: 15 },
-      { name: 'JavaScript', color: '#f1e05a', size: 12000, repos: 4, percentage: 12 },
-      { name: 'HTML', color: '#e34c26', size: 8000, repos: 4, percentage: 8 },
-      { name: 'CSS', color: '#663399', size: 5000, repos: 3, percentage: 5 },
-      { name: 'Svelte', color: '#ff3e00', size: 5000, repos: 1, percentage: 5 },
+      { name: 'TypeScript', color: '#3178c6', size: 68000, repos: 4, percentage: 68 },
+      { name: 'JavaScript', color: '#f1e05a', size: 20000, repos: 2, percentage: 20 },
+      { name: 'HTML', color: '#e34c26', size: 6000, repos: 1, percentage: 6 },
+      { name: 'CSS', color: '#663399', size: 4000, repos: 1, percentage: 4 },
+      { name: 'JSON', color: '#292929', size: 2000, repos: 2, percentage: 2 },
     ],
     topProjects: mockRepos.slice(0, 3),
     repos: mockRepos,
-    calendar: { totalContributions: 847, weeks },
+    calendar: { totalContributions: contributions, weeks },
   };
 }
 

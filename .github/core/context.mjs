@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// Plugin context builder — assembles the ctx object passed to every plugin's generate().
 
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';

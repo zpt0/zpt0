@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// cyberpunk-aura — animated GitHub profile SVG
-// Entry point for the plugin system: exports async generate(ctx)
 
 import {
   gql, QUERY, YEARLY_QUERY,
@@ -336,15 +334,11 @@ ${projects}
 </svg>`;
 }
 
-// --- Plugin entry point ---
-
-// Run directly when invoked as `node generator.mjs`
 (async () => {
   try {
     const { loadConfig, buildContext } = await import('../../core/context.mjs');
     const ctx = buildContext(loadConfig());
     const result = await generate(ctx);
-    // Handle the return value from cyberpunk-aura generator
     if (result?.assets?.length) {
       for (const asset of result.assets) {
         const assetPath = resolve(ctx.paths.assetsDir, asset.path);
@@ -392,14 +386,12 @@ export async function generate(ctx) {
 
   const svg = generateSVG(data);
 
-  // Write SVG asset
   const outDir = ctx.paths.assetsDir;
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
   const svgPath = resolve(outDir, 'profile.svg');
   writeFileSync(svgPath, svg, 'utf-8');
   console.log(`  Generated: ${svgPath} (${Math.round(svg.length/1024)}KB)`);
 
-  // Build README — the raw SVG URL uses the repo's main branch
   const { repo } = ctx;
   const svgUrl = `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/main/.github/readmes/${ctx.config.activeDesign}/assets/profile.svg`;
   const readme = `<p align="center">

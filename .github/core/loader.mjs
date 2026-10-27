@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-// Plugin loader — reads config.json, validates the active plugin, runs it.
-// This is the ONLY entry point the workflow calls.
 
 import { loadConfig, buildContext } from './context.mjs';
 import { validate } from './schema.mjs';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 function checkAssetPathSafety(pluginDir, assetsDir) {
   if (!assetsDir.startsWith(pluginDir)) {
@@ -17,7 +16,7 @@ function saveAssets(ctx, assets) {
   for (const asset of assets) {
     const outPath = resolve(ctx.paths.assetsDir, asset.path);
     checkAssetPathSafety(ctx.paths.assetsDir, outPath);
-    const outDir = outPath.substring(0, outPath.lastIndexOf('/'));
+    const outDir = dirname(outPath);
     if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
     writeFileSync(outPath, asset.content, 'utf-8');
     console.log(`  Asset: ${outPath}`);
@@ -26,7 +25,7 @@ function saveAssets(ctx, assets) {
 
 function writeReadme(ctx, readme) {
   const out = ctx.paths.readmePath;
-  const dir = out.substring(0, out.lastIndexOf('/'));
+  const dir = dirname(out);
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
   writeFileSync(out, readme, 'utf-8');
   console.log(`  README: ${out}`);
@@ -44,7 +43,6 @@ function writeReadme(ctx, readme) {
     process.exit(1);
   }
 
-  // Validate plugin manifest
   const manifestPath = resolve(ctx.paths.pluginDir, 'plugin.json');
   if (!existsSync(manifestPath)) {
     console.error(`plugin.json not found: ${manifestPath}`);
@@ -59,24 +57,20 @@ function writeReadme(ctx, readme) {
     process.exit(1);
   }
 
-  // Security: assetsDir must stay inside pluginDir
   const assetsDir = resolve(ctx.paths.pluginDir, manifest.output?.assetsDir || 'assets');
   checkAssetPathSafety(ctx.paths.pluginDir, assetsDir);
 
-  // Ensure output dirs exist
   if (!existsSync(ctx.paths.assetsDir)) mkdirSync(ctx.paths.assetsDir, { recursive: true });
 
-  // Load and run the plugin
   const entryPath = resolve(ctx.paths.pluginDir, manifest.entry);
   if (!existsSync(entryPath)) {
     console.error(`Entry not found: ${entryPath}`);
     process.exit(1);
   }
 
-  // Use direct require to support ESM/CJS in plugins
   let plugin;
   try {
-    const mod = await import(entryPath);
+    const mod = await import(pathToFileURL(entryPath).href);
     plugin = mod;
   } catch (e) {
     console.error(`Failed to load plugin at ${entryPath}: ${e.message}`);
@@ -98,12 +92,10 @@ function writeReadme(ctx, readme) {
     process.exit(1);
   }
 
-  // Write assets
   if (result?.assets && Array.isArray(result.assets)) {
     saveAssets(ctx, result.assets);
   }
 
-  // Write README
   if (typeof result?.readme === 'string') {
     writeReadme(ctx, result.readme);
   }
