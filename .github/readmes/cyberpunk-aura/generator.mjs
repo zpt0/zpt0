@@ -8,6 +8,7 @@ import {
   processData, mockData,
 } from '../../core/api.mjs';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { resolve } from 'node:path';
 
 function hexToRgb(hex) {
@@ -336,6 +337,35 @@ ${projects}
 }
 
 // --- Plugin entry point ---
+
+// Run directly when invoked as `node generator.mjs`
+(async () => {
+  try {
+    const { loadConfig, buildContext } = await import('../../core/context.mjs');
+    const ctx = buildContext(loadConfig());
+    const result = await generate(ctx);
+    // Handle the return value from cyberpunk-aura generator
+    if (result?.assets?.length) {
+      for (const asset of result.assets) {
+        const assetPath = resolve(ctx.paths.assetsDir, asset.path);
+        const assetDir = dirname(assetPath);
+        if (!existsSync(assetDir)) mkdirSync(assetDir, { recursive: true });
+        writeFileSync(assetPath, asset.content, 'utf-8');
+        console.log(`  Asset: ${assetPath}`);
+      }
+    }
+    if (result?.readme) {
+      const readmePath = resolve(ctx.paths.readmePath);
+      const readmeDir = dirname(readmePath);
+      if (!existsSync(readmeDir)) mkdirSync(readmeDir, { recursive: true });
+      writeFileSync(readmePath, result.readme, 'utf-8');
+      console.log(`  README: ${readmePath}`);
+    }
+  } catch (err) {
+    console.error('Failed to run generator:', err);
+    process.exit(1);
+  }
+})();
 
 export async function generate(ctx) {
   const username = ctx.user;

@@ -1,85 +1,87 @@
 {
-  "activeDesign": "dashboard-pro",
+  "activeDesign": "cyberpunk-aura",
   "allowedDesigns": ["cyberpunk-aura", "dashboard-pro"],
   "profile": {
     "displayName": "zpt0",
     "location": "",
     "website": "https://github.com/zpt0",
     "bio": "",
-    "currently": [
-      "Exploring reverse engineering techniques",
-      "Deepening OSINT & network analysis skills",
-      "Building AI-powered automation tools"
-    ],
-    "socials": [
-      { "label": "GitHub", "url": "https://github.com/zpt0" }
-    ],
-    "focusProjects": [
-      { "name": "DC-Lyra", "desc": "A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management", "url": "" },
-      { "name": "devinspire", "desc": "Spice up your GitHub README with random dev quotes. Custom styles, dynamic content.", "url": "" },
-      { "name": "nightcord", "desc": "Custom Discord tools and utilities for server management", "url": "" }
-    ],
     "accent": "#0e75b6",
-    "techStack": {
-      "Languages": [
-        { "name": "TypeScript", "level": 5 },
-        { "name": "JavaScript", "level": 5 },
-        { "name": "Python", "level": 4 },
-        { "name": "Rust", "level": 3 }
-      ],
-      "Hardware": [
-        { "name": "PC Hardware", "level": 4 },
-        { "name": "Troubleshooting", "level": 4 },
-        { "name": "ESP32", "level": 4 },
-        { "name": "Raspberry Pi", "level": 4 }
-      ],
-      "Security": [
-        { "name": "Networking", "level": 4 },
-        { "name": "OSINT", "level": 3 },
-        { "name": "Reverse Engineering", "level": 3 },
-        { "name": "Wireshark", "level": 4 },
-        { "name": "Nmap", "level": 4 }
-      ],
-      "Web & Backend": [
-        { "name": "Web Development", "level": 4 },
-        { "name": "REST APIs", "level": 4 },
-        { "name": "Backend Development", "level": 4 }
-      ],
-      "Databases": [
-        { "name": "SQL", "level": 4 },
-        { "name": "SQLite", "level": 4 },
-        { "name": "PostgreSQL", "level": 4 }
-      ],
-      "AI & Automation": [
-        { "name": "AI Integration", "level": 4 },
-        { "name": "Automation", "level": 4 },
-        { "name": "AI APIs", "level": 4 }
-      ],
-      "Systems": [
-        { "name": "Linux", "level": 5 },
-        { "name": "Windows", "level": 4 },
-        { "name": "CLI / Shell", "level": 4 },
-        { "name": "System Administration", "level": 4 }
-      ],
-      "Frameworks & Tools": [
-        { "name": "React", "type": "TypeScript / JavaScript" },
-        { "name": "Node.js", "type": "Backend / Runtime" },
-        { "name": "Bun", "type": "JavaScript / TypeScript Runtime" },
-        { "name": "Git", "type": "Version Control" },
-        { "name": "GitHub", "type": "Development / Collaboration" },
-        { "name": "Docker", "type": "Containers" },
-        { "name": "Burp Suite", "type": "Web Security" },
-        { "name": "VS Code", "type": "Development Environment" }
-      ]
-    },
+    "headerImage": "https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/header.svg",
+    "bannerImage": "https://raw.githubusercontent.com/zpt0/zpt0/main/.github/readmes/dashboard-pro/assets/banner.svg",
     "whoami": {
-      "name": "zpt0",
+      "displayName": "zpt0",
       "role": "Fullstack Developer",
-      "focus": ["Discord Bots", "Automation", "Security Research", "Reverse Engineering", "OSINT"],
-      "languages": ["TypeScript", "JavaScript", "Python", "Rust", "HTML/CSS"],
-      "hardware": ["Custom PCBs", "ESP32", "Raspberry Pi"],
-      "security": ["Network Analysis", "OSINT", "Reverse Engineering", "Wi-Fi Pentesting"],
-      "philosophy": "If it works, don't touch it."
-    }
+      "roleDescription": "building clean APIs, robust tests, and solid CI/CD pipelines",
+      "intro": "TypeScript-first. React/Next.js on the frontend. Node.js with NestJS or Express/Fastify on the backend. PostgreSQL + Prisma/Drizzle for data.\n\nfocus on saubere APIs, Tests und CI/CD - nicht auf buzzwords.",
+      "whatIdo": "i build full-stack TypeScript applications with clean architecture.\n\nfrontend with React/Next.js, backend with Node.js (NestJS or Express/Fastify), PostgreSQL with Prisma or Drizzle for the database.\n\nonly add Redis when it actually makes sense. Docker for containerization. GitHub Actions for CI/CD. One hosting provider, not all of them.\n\nsentry for monitoring. vitest/jest + playwright for testing.",
+      "experience": "years of building and breaking things - from Discord bots to full-stack web applications to security research tools.",
+      "alsoGoodAt": "nebenbei gut in Rust, Go und Python. AI stack - backend Kenntnisse, nicht Frontend-AI-Dings."
+    },      "projects": [
+        {
+          "name": "DC-Lyra",
+          "repository": "DC-Lyra",
+          "tagline": "A modern, modular Discord music bot with high-quality Lavalink audio and custom queue management"
+        }
+      ],
+    "focusProjects": [
+      {
+        "name": "DC-Lyra",
+        "url": "https://github.com/zpt0/DC-Lyra",
+        "tagline": "a modern, modular Discord music bot with high-quality Lavalink audio and custom queue management",
+        "metrics": [
+          "- modular plugin architecture",
+          "- Lavalink integration for high-quality audio",
+          "- custom queue management system"
+        ],
+        "highlight": "built for reliability and extensibility - the kind of bot that just works.",
+        "install": "git clone https://github.com/zpt0/DC-Lyra && cd DC-Lyra && npm install",
+        "flow": " discord → DC-Lyra → Lavalink → your ears"
+      },
+      {
+        "name": "devinspire",
+        "url": "https://github.com/zpt0/devinspire",
+        "tagline": "spice up your GitHub README with random dev quotes",
+        "metrics": [
+          "- custom styles",
+          "- dynamic content",
+          "- easy to integrate"
+        ],
+        "highlight": "because every coder needs a little inspiration."
+      },
+      {
+        "name": "nightcord",
+        "url": "https://github.com/zpt0/nightcord",
+        "tagline": "custom Discord tools and utilities for server management",
+        "metrics": [
+          "- server management tools",
+          "- custom utilities",
+          "- privacy-focused"
+        ],
+        "highlight": "tools that make server management less painful."
+      }
+    ],      "stackIcons": {
+        "languages": "ts",
+        "frameworks": "nextjs,nodejs,nestjs,express,postgres,prisma,docker,github"
+      },
+    "techBadges": [
+    { "name": "TypeScript", "color": "3178C6", "logo": "typescript" },
+    { "name": "React", "color": "61DAFB", "logo": "react" },
+    { "name": "Next.js", "color": "000000", "logo": "nextdotjs" },
+    { "name": "Node.js", "color": "339933", "logo": "node.js" },
+    { "name": "NestJS", "color": "E0234E", "logo": "nestjs" },
+    { "name": "Express", "color": "FFFFFF", "logo": "express" },
+    { "name": "PostgreSQL", "color": "4169E1", "logo": "postgresql" },
+    { "name": "Prisma", "color": "2D3748", "logo": "prisma" },
+    { "name": "Drizzle", "color": "3388FF", "logo": "drizzle" },
+    { "name": "Docker", "color": "2496ED", "logo": "docker" },
+    { "name": "GitHub Actions", "color": "20889B", "logo": "githubactions" },
+    { "name": "Sentry", "color": "362D59", "logo": "sentry" },
+    { "name": "Vitest", "color": "6E9F1C", "logo": "vitest" },
+    { "name": "Playwright", "color": "2EAD33", "logo": "playwright" }
+  ],
+    "links": [
+      { "label": "github", "url": "https://github.com/zpt0", "color": "24292E", "logo": "github" }
+    ]
   }
 }
