@@ -29,9 +29,92 @@ jobs:
           GITHUB_USER: zpt0
         run: node .github/core/loader.mjs
 
-      - name: Commit and push
+      # Commits created through createCommitOnBranch are signed by GitHub and
+      # therefore show up as "Verified". A plain `git commit` + `git push`
+      # produces unsigned commits, so it is not used here.
+      - name: Commit and push (GitHub-signed)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
           git add --force README.md .github/readmes/
-          git diff --staged --quiet || (git commit -m "chore: update profile" && git push)
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import subprocess
+
+
+          def run(*args):
+              return subprocess.check_output(args).decode().strip()
+
+
+          raw = subprocess.check_output(
+              ["git", "diff", "--staged", "--name-status", "-z"]
+          ).decode()
+          parts = raw.split("\0")
+
+          additions = []
+          deletions = []
+          i = 0
+          while i < len(parts):
+              status = parts[i]
+              if not status:
+                  i += 1
+                  continue
+              if status[0] in ("R", "C"):
+                  old_path, new_path = parts[i + 1], parts[i + 2]
+                  deletions.append({"path": old_path})
+                  with open(new_path, "rb") as handle:
+                      additions.append({
+                          "path": new_path,
+                          "contents": base64.b64encode(handle.read()).decode(),
+                      })
+                  i += 3
+              elif status[0] == "D":
+                  deletions.append({"path": parts[i + 1]})
+                  i += 2
+              else:
+                  path = parts[i + 1]
+                  with open(path, "rb") as handle:
+                      additions.append({
+                          "path": path,
+                          "contents": base64.b64encode(handle.read()).decode(),
+                      })
+                  i += 2
+
+          query = (
+              "mutation($input:CreateCommitOnBranchInput!)"
+              "{createCommitOnBranch(input:$input){commit{oid url}}}"
+          )
+          variables = {
+              "input": {
+                  "branch": {
+                      "repositoryNameWithOwner": os.environ["GITHUB_REPOSITORY"],
+                      "branchName": os.environ["BRANCH"],
+                  },
+                  "message": {"headline": "chore: update profile"},
+                  "fileChanges": {
+                      "additions": additions,
+                      "deletions": deletions,
+                  },
+                  "expectedHeadOid": run("git", "rev-parse", "HEAD"),
+              }
+          }
+
+          result = subprocess.run(
+              ["gh", "api", "graphql", "--input", "-"],
+              input=json.dumps({"query": query, "variables": variables}),
+              text=True,
+              capture_output=True,
+          )
+          print(result.stdout, end="")
+          print(result.stderr, end="")
+          raise SystemExit(result.returncode)
+          PY
